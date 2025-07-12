@@ -1,3 +1,4 @@
+import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
 import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot } from 'lucide-react';
 
@@ -40,6 +41,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
   ]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState<Array<{
+    role: 'user' | 'assistant';
+    content: string;
+  }>>([]);
 
   const sections: GuideSection[] = [
     {
@@ -220,57 +225,84 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     };
 
     setChatMessages(prev => [...prev, userMessage]);
+    
+    // Ajouter à l'historique de conversation
+    const newHistory = [
+      ...conversationHistory,
+      { role: 'user' as const, content: currentMessage }
+    ];
+    setConversationHistory(newHistory);
+    
     setCurrentMessage('');
     setIsTyping(true);
 
-    // Simuler une réponse de l'IA après un délai
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(currentMessage);
+    try {
+      // Appeler l'API OpenAI via notre edge function
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-ai`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          conversationHistory: newHistory.slice(-10) // Garder les 10 derniers messages
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la communication avec l\'IA');
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: aiResponse,
+        content: data.response,
         timestamp: new Date()
       };
       
       setChatMessages(prev => [...prev, aiMessage]);
+      
+      // Ajouter la réponse à l'historique
+      setConversationHistory(prev => [
+        ...prev,
+        { role: 'assistant', content: data.response }
+      ]);
+      
+    } catch (error) {
+      console.error('Erreur:', error);
+      
+      // Message d'erreur de fallback
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: "Désolé, je rencontre un problème technique. Pouvez-vous réessayer ? En attendant, voici quelques conseils généraux : utilisez des mots de passe uniques et forts, activez la double authentification, et restez vigilant face aux emails suspects. 🔐",
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
-  const generateAIResponse = (question: string): string => {
-    const lowerQuestion = question.toLowerCase();
-    
-    if (lowerQuestion.includes('mot de passe') || lowerQuestion.includes('password')) {
-      return "Pour créer des mots de passe sécurisés, je recommande d'utiliser un gestionnaire de mots de passe comme Bitwarden ou 1Password. Créez des mots de passe d'au moins 12 caractères avec des lettres, chiffres et symboles. Surtout, utilisez un mot de passe unique pour chaque compte ! 🔐";
-    }
-    
-    if (lowerQuestion.includes('phishing') || lowerQuestion.includes('email') || lowerQuestion.includes('mail')) {
-      return "Pour éviter le phishing : vérifiez toujours l'adresse de l'expéditeur, méfiez-vous des liens suspects, et ne donnez jamais vos informations personnelles par email. En cas de doute, contactez directement l'organisme concerné ! 📧";
-    }
-    
-    if (lowerQuestion.includes('wifi') || lowerQuestion.includes('réseau')) {
-      return "Sur les réseaux WiFi publics, évitez de consulter vos comptes sensibles (banque, emails). Utilisez un VPN si possible, ou préférez vos données mobiles pour les activités importantes. Les réseaux publics peuvent être surveillés ! 📶";
-    }
-    
-    if (lowerQuestion.includes('2fa') || lowerQuestion.includes('authentification') || lowerQuestion.includes('double')) {
-      return "L'authentification à deux facteurs (2FA) ajoute une couche de sécurité essentielle ! Activez-la sur tous vos comptes importants. Utilisez une app comme Google Authenticator ou Authy plutôt que les SMS quand c'est possible. 🛡️";
-    }
-    
-    if (lowerQuestion.includes('réseaux sociaux') || lowerQuestion.includes('facebook') || lowerQuestion.includes('instagram')) {
-      return "Sur les réseaux sociaux : configurez vos comptes en privé, limitez les informations personnelles partagées, désactivez la géolocalisation automatique, et vérifiez régulièrement vos paramètres de confidentialité. Réfléchissez avant de publier ! 📱";
-    }
-    
-    if (lowerQuestion.includes('mise à jour') || lowerQuestion.includes('update')) {
-      return "Les mises à jour sont cruciales pour votre sécurité ! Elles corrigent souvent des failles de sécurité. Activez les mises à jour automatiques quand c'est possible, et installez-les dès qu'elles sont disponibles. 🔄";
-    }
-    
-    if (lowerQuestion.includes('sauvegarde') || lowerQuestion.includes('backup')) {
-      return "Sauvegardez régulièrement vos données importantes ! Utilisez la règle 3-2-1 : 3 copies de vos données, sur 2 supports différents, dont 1 hors site (cloud sécurisé). Testez vos sauvegardes régulièrement ! 💾";
-    }
-    
-    // Réponse générale
-    return "C'est une excellente question sur la cybersécurité ! En général, les bonnes pratiques incluent : utiliser des mots de passe uniques et forts, activer la double authentification, maintenir vos logiciels à jour, et rester vigilant face aux emails suspects. Avez-vous un aspect particulier sur lequel vous aimeriez que je vous donne plus de détails ? 🤔";
+  const handleResetChat = () => {
+    setChatMessages([
+      {
+        id: '1',
+        type: 'ai',
+        content: 'Bonjour ! Je suis votre assistant cybersécurité alimenté par ChatGPT. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
+        timestamp: new Date()
+      }
+    ]);
+    setConversationHistory([]);
+    setCurrentMessage('');
   };
 
   const selectedSectionData = selectedSection 
@@ -306,12 +338,18 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="text-center">
             <div className="flex items-center space-x-2 sm:space-x-3 justify-center">
               <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant IA</h1>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant ChatGPT</h1>
             </div>
-            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Posez vos questions sur la sécurité numérique</p>
+            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Guides pratiques + IA OpenAI</p>
           </div>
           
-          <div className="w-16 sm:w-20"></div>
+          <button
+            onClick={handleResetChat}
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 sm:py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-xs sm:text-sm"
+          >
+            <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Reset</span>
+          </button>
         </div>
 
         {/* Chat Container */}
@@ -331,7 +369,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                   {message.type === 'ai' && (
                     <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                       <Bot className="h-4 w-4 text-blue-400" />
-                      <span className="text-xs text-blue-400 font-medium">Assistant IA</span>
+                      <span className="text-xs text-blue-400 font-medium">ChatGPT</span>
                     </div>
                   )}
                   <p className="text-xs sm:text-sm leading-relaxed">{message.content}</p>
@@ -344,7 +382,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 <div className="bg-slate-700 text-slate-100 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl">
                   <div className="flex items-center space-x-2">
                     <Bot className="h-4 w-4 text-blue-400" />
-                    <span className="text-xs text-blue-400 font-medium">Assistant IA</span>
+                    <span className="text-xs text-blue-400 font-medium">ChatGPT</span>
                   </div>
                   <div className="flex space-x-1 mt-1 sm:mt-2">
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
@@ -364,7 +402,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 value={currentMessage}
                 onChange={(e) => setCurrentMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Posez votre question sur la cybersécurité..."
+                placeholder="Posez votre question à ChatGPT..."
                 className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
                 disabled={isTyping}
               />
@@ -394,6 +432,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               <button
                 key={index}
                 onClick={() => setCurrentMessage(suggestion)}
+                disabled={isTyping}
                 className="text-left p-2 sm:p-3 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors text-xs sm:text-sm"
               >
                 {suggestion}
@@ -572,10 +611,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               
               <div className="flex-1">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2 group-hover:text-green-300 transition-colors">
-                  Assistant IA Cybersécurité
+                  Assistant ChatGPT Cybersécurité
                 </h3>
                 <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
-                  Posez directement vos questions sur la cybersécurité et obtenez des réponses personnalisées et des conseils pratiques.
+                  Posez directement vos questions à ChatGPT et obtenez des réponses personnalisées sur la cybersécurité.
                 </p>
               </div>
               
