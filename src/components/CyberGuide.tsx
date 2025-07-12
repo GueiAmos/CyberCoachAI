@@ -278,11 +278,21 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     } catch (error) {
       console.error('Erreur:', error);
       
-      // Message d'erreur de fallback
+      // Gestion d'erreur améliorée avec message spécifique
+      let errorContent = "Désolé, je rencontre un problème technique. Pouvez-vous réessayer ? 🔐";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('OpenAI')) {
+          errorContent = "Problème de connexion avec l'assistant IA. Vérifiez que la clé API OpenAI est configurée dans Supabase. En attendant, voici quelques conseils : utilisez des mots de passe uniques et forts, activez la double authentification ! 🔐";
+        } else if (error.message.includes('fetch')) {
+          errorContent = "Problème de réseau. Vérifiez votre connexion internet et réessayez. 🌐";
+        }
+      }
+      
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: "Désolé, je rencontre un problème technique. Pouvez-vous réessayer ? En attendant, voici quelques conseils généraux : utilisez des mots de passe uniques et forts, activez la double authentification, et restez vigilant face aux emails suspects. 🔐",
+        content: errorContent,
         timestamp: new Date()
       };
       
