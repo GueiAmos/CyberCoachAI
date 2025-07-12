@@ -348,7 +348,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="text-center">
             <div className="flex items-center space-x-2 sm:space-x-3 justify-center">
               <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant Gemini</h1>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant CyberCoach</h1>
             </div>
             <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Guides pratiques + IA Gemini</p>
           </div>
