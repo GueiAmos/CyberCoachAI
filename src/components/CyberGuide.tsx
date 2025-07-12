@@ -35,7 +35,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     {
       id: '1',
       type: 'ai',
-      content: 'Salut ! 👋 Je suis CyberGuide AI, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
+      content: 'Salut ! 👋 Je suis CyberGuide, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
       timestamp: new Date()
     }
   ]);
@@ -307,7 +307,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
       {
         id: '1',
         type: 'ai',
-        content: 'Salut ! 👋 Je suis CyberGuide AI, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
+        content: 'Salut ! 👋 Je suis CyberGuide, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
         timestamp: new Date()
       }
     ]);
@@ -348,7 +348,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="text-center">
             <div className="flex items-center space-x-2 sm:space-x-3 justify-center">
               <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">CyberGuide AI</h1>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">CyberGuide</h1>
             </div>
             <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Assistant cybersécurité intelligent</p>
           </div>
