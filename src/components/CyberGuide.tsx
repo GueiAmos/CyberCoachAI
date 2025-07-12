@@ -35,7 +35,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     {
       id: '1',
       type: 'ai',
-      content: 'Bonjour ! Je suis votre assistant cybersécurité. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
+      content: 'Bonjour ! Je suis votre assistant cybersécurité alimenté par Gemini AI. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
       timestamp: new Date()
     }
   ]);
@@ -237,7 +237,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     setIsTyping(true);
 
     try {
-      // Appeler l'API OpenAI via notre edge function
+      // Appeler l'API Gemini via notre edge function
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-ai`, {
         method: 'POST',
         headers: {
@@ -282,8 +282,8 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
       let errorContent = "Désolé, je rencontre un problème technique. Pouvez-vous réessayer ? 🔐";
       
       if (error instanceof Error) {
-        if (error.message.includes('OpenAI')) {
-          errorContent = "Problème de connexion avec l'assistant IA. Vérifiez que la clé API OpenAI est configurée dans Supabase. En attendant, voici quelques conseils : utilisez des mots de passe uniques et forts, activez la double authentification ! 🔐";
+        if (error.message.includes('Gemini')) {
+          errorContent = "Problème de connexion avec l'assistant IA. Vérifiez que la clé API Gemini est configurée dans Supabase. En attendant, voici quelques conseils : utilisez des mots de passe uniques et forts, activez la double authentification ! 🔐";
         } else if (error.message.includes('fetch')) {
           errorContent = "Problème de réseau. Vérifiez votre connexion internet et réessayez. 🌐";
         }
@@ -307,7 +307,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
       {
         id: '1',
         type: 'ai',
-        content: 'Bonjour ! Je suis votre assistant cybersécurité alimenté par ChatGPT. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
+        content: 'Bonjour ! Je suis votre assistant cybersécurité alimenté par Gemini AI. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
         timestamp: new Date()
       }
     ]);
@@ -348,9 +348,9 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="text-center">
             <div className="flex items-center space-x-2 sm:space-x-3 justify-center">
               <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant ChatGPT</h1>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant Gemini</h1>
             </div>
-            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Guides pratiques + IA OpenAI</p>
+            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Guides pratiques + IA Gemini</p>
           </div>
           
           <button
@@ -379,7 +379,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                   {message.type === 'ai' && (
                     <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                       <Bot className="h-4 w-4 text-blue-400" />
-                      <span className="text-xs text-blue-400 font-medium">ChatGPT</span>
+                      <span className="text-xs text-blue-400 font-medium">Gemini</span>
                     </div>
                   )}
                   <p className="text-xs sm:text-sm leading-relaxed">{message.content}</p>
@@ -392,7 +392,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 <div className="bg-slate-700 text-slate-100 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl">
                   <div className="flex items-center space-x-2">
                     <Bot className="h-4 w-4 text-blue-400" />
-                    <span className="text-xs text-blue-400 font-medium">ChatGPT</span>
+                    <span className="text-xs text-blue-400 font-medium">Gemini</span>
                   </div>
                   <div className="flex space-x-1 mt-1 sm:mt-2">
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
@@ -412,7 +412,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 value={currentMessage}
                 onChange={(e) => setCurrentMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Posez votre question à ChatGPT..."
+                placeholder="Posez votre question à Gemini..."
                 className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
                 disabled={isTyping}
               />
@@ -621,10 +621,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               
               <div className="flex-1">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2 group-hover:text-green-300 transition-colors">
-                  Assistant ChatGPT Cybersécurité
+                  Assistant Gemini Cybersécurité
                 </h3>
                 <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
-                  Posez directement vos questions à ChatGPT et obtenez des réponses personnalisées sur la cybersécurité.
+                  Posez directement vos questions à Gemini et obtenez des réponses personnalisées sur la cybersécurité.
                 </p>
               </div>
               
