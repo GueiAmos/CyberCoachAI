@@ -74,7 +74,7 @@ Domaines d'expertise :
     const recentHistory = conversationHistory.slice(-10);
     for (const msg of recentHistory) {
       if (msg.role === 'user') {
-        conversationText += \`Utilisateur: ${msg.content}\n`;
+        conversationText += `Utilisateur: ${msg.content}\n`;
       } else {
         conversationText += `Assistant: ${msg.content}\n`;
       }
