@@ -35,7 +35,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     {
       id: '1',
       type: 'ai',
-      content: 'Salut ! 👋 Je suis CyberGuide, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
+      content: 'Salut ! 👋 Je suis CyberGuide IA, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
       timestamp: new Date()
     }
   ]);
