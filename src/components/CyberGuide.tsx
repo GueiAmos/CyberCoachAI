@@ -392,7 +392,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 <div className="bg-slate-700 text-slate-100 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl">
                   <div className="flex items-center space-x-2">
                     <Bot className="h-4 w-4 text-blue-400" />
-                    <span className="text-xs text-blue-400 font-medium">CyberGuide AI</span>
+                    <span className="text-xs text-blue-400 font-medium">CyberGuide IA</span>
                   </div>
                   <div className="flex space-x-1 mt-1 sm:mt-2">
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
