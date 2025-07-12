@@ -38,7 +38,15 @@ Deno.serve(async (req: Request) => {
     
     if (!geminiApiKey) {
       console.error('Clé API Gemini manquante');
+      return new Response(
+        JSON.stringify({ error: "Configuration API manquante" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
       );
+    }
+
     // Système de prompt spécialisé en cybersécurité
     const systemPrompt = `Tu es CyberGuide AI, l'assistant intelligent de l'application CyberCoach AI. Tu es un expert sympathique en cybersécurité et protection des données personnelles.
 
@@ -56,7 +64,7 @@ Domaines d'expertise :
 - Sauvegardes et protection des données
 - Mises à jour de sécurité
 - Authentification à deux facteurs (2FA)
-- Gestionnaires de mots de passe
+- Gestionnaires de mots de passe`;
 
 
     // Construire l'historique de conversation pour Gemini
@@ -66,7 +74,7 @@ Domaines d'expertise :
     const recentHistory = conversationHistory.slice(-10);
     for (const msg of recentHistory) {
       if (msg.role === 'user') {
-        conversationText += `Utilisateur: ${msg.content}\n`;
+        conversationText += \`Utilisateur: ${msg.content}\n`;
       } else {
         conversationText += `Assistant: ${msg.content}\n`;
       }
