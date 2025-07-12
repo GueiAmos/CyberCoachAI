@@ -35,7 +35,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     {
       id: '1',
       type: 'ai',
-      content: 'Bonjour ! Je suis votre assistant cybersécurité alimenté par Gemini AI. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
+      content: 'Salut ! 👋 Je suis CyberGuide AI, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
       timestamp: new Date()
     }
   ]);
@@ -307,7 +307,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
       {
         id: '1',
         type: 'ai',
-        content: 'Bonjour ! Je suis votre assistant cybersécurité alimenté par Gemini AI. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
+        content: 'Salut ! 👋 Je suis CyberGuide AI, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
         timestamp: new Date()
       }
     ]);
@@ -348,9 +348,9 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="text-center">
             <div className="flex items-center space-x-2 sm:space-x-3 justify-center">
               <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant IA</h1>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">CyberGuide AI</h1>
             </div>
-            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Posez vos questions sur la sécurité numérique</p>
+            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Assistant cybersécurité intelligent</p>
           </div>
           
           <button
@@ -379,10 +379,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                   {message.type === 'ai' && (
                     <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                       <Bot className="h-4 w-4 text-blue-400" />
-                      <span className="text-xs text-blue-400 font-medium">Assistant IA</span>
+                      <span className="text-xs text-blue-400 font-medium">CyberGuide AI</span>
                     </div>
                   )}
-                  <p className="text-xs sm:text-sm leading-relaxed">{message.content}</p>
+                  <div className="text-xs sm:text-sm leading-relaxed whitespace-pre-line">{message.content}</div>
                 </div>
               </div>
             ))}
@@ -392,7 +392,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 <div className="bg-slate-700 text-slate-100 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl">
                   <div className="flex items-center space-x-2">
                     <Bot className="h-4 w-4 text-blue-400" />
-                    <span className="text-xs text-blue-400 font-medium">Gemini</span>
+                    <span className="text-xs text-blue-400 font-medium">CyberGuide AI</span>
                   </div>
                   <div className="flex space-x-1 mt-1 sm:mt-2">
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
@@ -412,7 +412,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 value={currentMessage}
                 onChange={(e) => setCurrentMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Posez votre question à Gemini..."
+                placeholder="Posez votre question à CyberGuide AI..."
                 className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
                 disabled={isTyping}
               />
@@ -433,11 +433,11 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
             {[
               "Comment créer un mot de passe sécurisé ?",
-              "Qu'est-ce que le phishing et comment l'éviter ?",
+              "Comment utiliser CyberQuest ?",
               "Comment sécuriser mon WiFi à la maison ?",
-              "Qu'est-ce que l'authentification à deux facteurs ?",
-              "Comment protéger ma vie privée sur les réseaux sociaux ?",
-              "Pourquoi les mises à jour sont-elles importantes ?"
+              "À quoi sert CyberScan ?",
+              "Comment reconnaître un phishing ?",
+              "Que contient CyberCoach AI ?"
             ].map((suggestion, index) => (
               <button
                 key={index}
@@ -621,10 +621,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               
               <div className="flex-1">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2 group-hover:text-green-300 transition-colors">
-                  Assistant Gemini Cybersécurité
+                  <span>CyberGuide AI - Assistant Intelligent</span>
                 </h3>
                 <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
-                  Posez directement vos questions à Gemini et obtenez des réponses personnalisées sur la cybersécurité.
+                  Posez directement vos questions à CyberGuide AI et obtenez des réponses personnalisées sur la cybersécurité et l'application.
                 </p>
               </div>
               

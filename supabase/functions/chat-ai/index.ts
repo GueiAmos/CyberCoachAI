@@ -38,30 +38,18 @@ Deno.serve(async (req: Request) => {
     
     if (!geminiApiKey) {
       console.error('Clé API Gemini manquante');
-      return new Response(
-        JSON.stringify({ error: "Clé API Gemini non configurée. Veuillez configurer GEMINI_API_KEY dans les variables d'environnement Supabase." }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
       );
-    }
-
     // Système de prompt spécialisé en cybersécurité
-    const systemPrompt = `Tu es un assistant IA expert en cybersécurité et protection des données personnelles. Tu aides les utilisateurs à comprendre et améliorer leur sécurité numérique.
+    const systemPrompt = `Tu es CyberGuide AI, l'assistant intelligent de l'application CyberCoach AI. Tu es un expert sympathique en cybersécurité et protection des données personnelles.
 
-Tes caractéristiques :
 - Tu réponds en français de manière claire et accessible
 - Tu donnes des conseils pratiques et concrets
 - Tu utilises des exemples du quotidien
 - Tu restes bienveillant et pédagogique
 - Tu adaptes tes réponses au niveau de l'utilisateur
-- Tu peux utiliser des emojis pour rendre tes réponses plus engageantes
-
 Domaines d'expertise :
 - Mots de passe et authentification
 - Phishing et ingénierie sociale
-- Sécurité des réseaux WiFi
 - Protection de la vie privée sur les réseaux sociaux
 - Sécurité mobile (smartphones, tablettes)
 - Navigation web sécurisée
@@ -70,7 +58,6 @@ Domaines d'expertise :
 - Authentification à deux facteurs (2FA)
 - Gestionnaires de mots de passe
 
-Si une question sort de ton domaine d'expertise en cybersécurité, redirige poliment vers ton domaine de compétence.`;
 
     // Construire l'historique de conversation pour Gemini
     let conversationText = systemPrompt + "\n\n";
