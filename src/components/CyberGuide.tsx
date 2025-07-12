@@ -307,7 +307,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
       {
         id: '1',
         type: 'ai',
-        content: 'Salut ! 👋 Je suis CyberGuide, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
+        content: 'Salut ! 👋 Je suis CyberGuide IA, votre assistant cybersécurité.\n\nJe peux vous aider avec :\n- Des questions sur la sécurité numérique\n- L\'utilisation de CyberCoach AI\n- Des conseils pratiques et directs\n\nQue puis-je faire pour vous ? 🔐',
         timestamp: new Date()
       }
     ]);
@@ -412,7 +412,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 value={currentMessage}
                 onChange={(e) => setCurrentMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Posez votre question à CyberGuide AI..."
+                placeholder="Posez votre question à CyberGuide IA..."
                 className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
                 disabled={isTyping}
               />
@@ -621,10 +621,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               
               <div className="flex-1">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2 group-hover:text-green-300 transition-colors">
-                  <span>CyberGuide AI - Assistant Intelligent</span>
+                  <span>CyberGuide IA - Assistant Intelligent</span>
                 </h3>
                 <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
-                  Posez directement vos questions à CyberGuide AI et obtenez des réponses personnalisées sur la cybersécurité et l'application.
+                  Posez directement vos questions à CyberGuide IA et obtenez des réponses personnalisées sur la cybersécurité et l'application.
                 </p>
               </div>
               
