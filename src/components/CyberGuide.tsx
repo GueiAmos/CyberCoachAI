@@ -1,0 +1,646 @@
+import React, { useState } from 'react';
+import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot } from 'lucide-react';
+
+interface CyberGuideProps {
+  onBack: () => void;
+}
+
+interface GuideSection {
+  id: string;
+  title: string;
+  icon: React.ComponentType<any>;
+  description: string;
+  risks: string[];
+  practices: Array<{
+    title: string;
+    description: string;
+    completed: boolean;
+  }>;
+  tips: string[];
+}
+
+interface ChatMessage {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
+  timestamp: Date;
+}
+
+export default function CyberGuide({ onBack }: CyberGuideProps) {
+  const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [checkedPractices, setCheckedPractices] = useState<Set<string>>(new Set());
+  const [showChat, setShowChat] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      id: '1',
+      type: 'ai',
+      content: 'Bonjour ! Je suis votre assistant cybersécurité. Posez-moi vos questions sur la protection de vos données, la sécurité en ligne, ou tout autre sujet lié à la cybersécurité. Je suis là pour vous aider ! 🔐',
+      timestamp: new Date()
+    }
+  ]);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+
+  const sections: GuideSection[] = [
+    {
+      id: 'social-media',
+      title: 'Réseaux Sociaux',
+      icon: Globe,
+      description: 'Protégez votre vie privée sur les plateformes sociales',
+      risks: [
+        'Exposition d\'informations personnelles sensibles',
+        'Géolocalisation et traçage de vos activités',
+        'Utilisation de vos données à des fins commerciales',
+        'Harcèlement et usurpation d\'identité'
+      ],
+      practices: [
+        {
+          title: 'Paramètres de confidentialité',
+          description: 'Configurez vos comptes en mode privé et limitez qui peut voir vos publications',
+          completed: false
+        },
+        {
+          title: 'Informations personnelles',
+          description: 'Évitez de partager votre adresse, numéro de téléphone ou informations sensibles',
+          completed: false
+        },
+        {
+          title: 'Géolocalisation',
+          description: 'Désactivez le partage automatique de votre position',
+          completed: false
+        },
+        {
+          title: 'Demandes d\'amis',
+          description: 'N\'acceptez que les personnes que vous connaissez réellement',
+          completed: false
+        }
+      ],
+      tips: [
+        'Vérifiez régulièrement vos paramètres de confidentialité',
+        'Réfléchissez avant de publier : cette information peut-elle me nuire ?'
+      ]
+    },
+    {
+      id: 'mobile',
+      title: 'Sécurité Mobile',
+      icon: Smartphone,
+      description: 'Sécurisez votre smartphone et vos applications',
+      risks: [
+        'Accès non autorisé à vos données personnelles',
+        'Applications malveillantes et espions',
+        'Vol de données bancaires et d\'identité',
+        'Écoute et surveillance de vos communications'
+      ],
+      practices: [
+        {
+          title: 'Verrouillage d\'écran',
+          description: 'Utilisez un code PIN, empreinte ou reconnaissance faciale sécurisé',
+          completed: false
+        },
+        {
+          title: 'Source des applications',
+          description: 'Téléchargez uniquement depuis les stores officiels (App Store, Google Play)',
+          completed: false
+        },
+        {
+          title: 'Permissions d\'applications',
+          description: 'Vérifiez et limitez les autorisations accordées à chaque application',
+          completed: false
+        },
+        {
+          title: 'Mises à jour',
+          description: 'Maintenez votre système et vos applications à jour',
+          completed: false
+        }
+      ],
+      tips: [
+        'Activez la localisation à distance en cas de perte',
+        'Évitez les réseaux WiFi publics pour les données sensibles'
+      ]
+    },
+    {
+      id: 'browser',
+      title: 'Navigation Web',
+      icon: Globe,
+      description: 'Naviguez en sécurité sur Internet',
+      risks: [
+        'Tracking publicitaire et profilage comportemental',
+        'Sites web malveillants et téléchargements infectés',
+        'Vol de cookies et données de session',
+        'Hameçonnage et sites frauduleux'
+      ],
+      practices: [
+        {
+          title: 'Navigateur sécurisé',
+          description: 'Utilisez un navigateur à jour avec des extensions de sécurité',
+          completed: false
+        },
+        {
+          title: 'Bloqueur de publicités',
+          description: 'Installez un bloqueur de pubs pour éviter les publicités malveillantes',
+          completed: false
+        },
+        {
+          title: 'Mode incognito',
+          description: 'Utilisez la navigation privée pour les recherches sensibles',
+          completed: false
+        },
+        {
+          title: 'Vérification d\'URL',
+          description: 'Vérifiez toujours l\'adresse des sites avant de saisir des informations',
+          completed: false
+        }
+      ],
+      tips: [
+        'Méfiez-vous des téléchargements automatiques',
+        'Utilisez un VPN pour une protection supplémentaire'
+      ]
+    },
+    {
+      id: 'passwords',
+      title: 'Gestion des Mots de Passe',
+      icon: Lock,
+      description: 'Créez et gérez des mots de passe sécurisés',
+      risks: [
+        'Piratage de comptes par force brute',
+        'Réutilisation de mots de passe compromis',
+        'Accès non autorisé à plusieurs services',
+        'Vol d\'identité et fraude financière'
+      ],
+      practices: [
+        {
+          title: 'Gestionnaire de mots de passe',
+          description: 'Utilisez un gestionnaire réputé comme Bitwarden, 1Password ou LastPass',
+          completed: false
+        },
+        {
+          title: 'Mots de passe uniques',
+          description: 'Créez un mot de passe différent pour chaque compte',
+          completed: false
+        },
+        {
+          title: 'Complexité',
+          description: 'Utilisez au moins 12 caractères avec lettres, chiffres et symboles',
+          completed: false
+        },
+        {
+          title: 'Authentification 2FA',
+          description: 'Activez la double authentification partout où c\'est possible',
+          completed: false
+        }
+      ],
+      tips: [
+        'Changez immédiatement les mots de passe par défaut',
+        'Évitez les informations personnelles dans vos mots de passe'
+      ]
+    }
+  ];
+
+  const handlePracticeToggle = (sectionId: string, practiceIndex: number) => {
+    const key = `${sectionId}-${practiceIndex}`;
+    const newChecked = new Set(checkedPractices);
+    
+    if (newChecked.has(key)) {
+      newChecked.delete(key);
+    } else {
+      newChecked.add(key);
+    }
+    
+    setCheckedPractices(newChecked);
+  };
+
+  const handleSendMessage = async () => {
+    if (!currentMessage.trim()) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: currentMessage,
+      timestamp: new Date()
+    };
+
+    setChatMessages(prev => [...prev, userMessage]);
+    setCurrentMessage('');
+    setIsTyping(true);
+
+    // Simuler une réponse de l'IA après un délai
+    setTimeout(() => {
+      const aiResponse = generateAIResponse(currentMessage);
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: aiResponse,
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, aiMessage]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  const generateAIResponse = (question: string): string => {
+    const lowerQuestion = question.toLowerCase();
+    
+    if (lowerQuestion.includes('mot de passe') || lowerQuestion.includes('password')) {
+      return "Pour créer des mots de passe sécurisés, je recommande d'utiliser un gestionnaire de mots de passe comme Bitwarden ou 1Password. Créez des mots de passe d'au moins 12 caractères avec des lettres, chiffres et symboles. Surtout, utilisez un mot de passe unique pour chaque compte ! 🔐";
+    }
+    
+    if (lowerQuestion.includes('phishing') || lowerQuestion.includes('email') || lowerQuestion.includes('mail')) {
+      return "Pour éviter le phishing : vérifiez toujours l'adresse de l'expéditeur, méfiez-vous des liens suspects, et ne donnez jamais vos informations personnelles par email. En cas de doute, contactez directement l'organisme concerné ! 📧";
+    }
+    
+    if (lowerQuestion.includes('wifi') || lowerQuestion.includes('réseau')) {
+      return "Sur les réseaux WiFi publics, évitez de consulter vos comptes sensibles (banque, emails). Utilisez un VPN si possible, ou préférez vos données mobiles pour les activités importantes. Les réseaux publics peuvent être surveillés ! 📶";
+    }
+    
+    if (lowerQuestion.includes('2fa') || lowerQuestion.includes('authentification') || lowerQuestion.includes('double')) {
+      return "L'authentification à deux facteurs (2FA) ajoute une couche de sécurité essentielle ! Activez-la sur tous vos comptes importants. Utilisez une app comme Google Authenticator ou Authy plutôt que les SMS quand c'est possible. 🛡️";
+    }
+    
+    if (lowerQuestion.includes('réseaux sociaux') || lowerQuestion.includes('facebook') || lowerQuestion.includes('instagram')) {
+      return "Sur les réseaux sociaux : configurez vos comptes en privé, limitez les informations personnelles partagées, désactivez la géolocalisation automatique, et vérifiez régulièrement vos paramètres de confidentialité. Réfléchissez avant de publier ! 📱";
+    }
+    
+    if (lowerQuestion.includes('mise à jour') || lowerQuestion.includes('update')) {
+      return "Les mises à jour sont cruciales pour votre sécurité ! Elles corrigent souvent des failles de sécurité. Activez les mises à jour automatiques quand c'est possible, et installez-les dès qu'elles sont disponibles. 🔄";
+    }
+    
+    if (lowerQuestion.includes('sauvegarde') || lowerQuestion.includes('backup')) {
+      return "Sauvegardez régulièrement vos données importantes ! Utilisez la règle 3-2-1 : 3 copies de vos données, sur 2 supports différents, dont 1 hors site (cloud sécurisé). Testez vos sauvegardes régulièrement ! 💾";
+    }
+    
+    // Réponse générale
+    return "C'est une excellente question sur la cybersécurité ! En général, les bonnes pratiques incluent : utiliser des mots de passe uniques et forts, activer la double authentification, maintenir vos logiciels à jour, et rester vigilant face aux emails suspects. Avez-vous un aspect particulier sur lequel vous aimeriez que je vous donne plus de détails ? 🤔";
+  };
+
+  const selectedSectionData = selectedSection 
+    ? sections.find(s => s.id === selectedSection)
+    : null;
+
+  const getCompletionPercentage = (sectionId: string) => {
+    const section = sections.find(s => s.id === sectionId);
+    if (!section) return 0;
+    
+    const completed = section.practices.filter((_, index) => 
+      checkedPractices.has(`${sectionId}-${index}`)
+    ).length;
+    
+    return Math.round((completed / section.practices.length) * 100);
+  };
+
+  // Vue Chat IA
+  if (showChat) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
+          <button
+            onClick={() => setShowChat(false)}
+            className="flex items-center space-x-1 sm:space-x-2 text-blue-400 hover:text-blue-300 transition-colors text-sm sm:text-base"
+          >
+            <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="hidden sm:inline">Retour aux guides</span>
+            <span className="sm:hidden">Retour</span>
+          </button>
+          
+          <div className="text-center">
+            <div className="flex items-center space-x-2 sm:space-x-3 justify-center">
+              <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Assistant IA</h1>
+            </div>
+            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Posez vos questions sur la sécurité numérique</p>
+          </div>
+          
+          <div className="w-16 sm:w-20"></div>
+        </div>
+
+        {/* Chat Container */}
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
+          {/* Messages */}
+          <div className="h-80 sm:h-96 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
+            {chatMessages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`max-w-xs sm:max-w-sm lg:max-w-md px-3 sm:px-4 py-2 sm:py-3 rounded-2xl ${
+                  message.type === 'user'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-700 text-slate-100'
+                }`}>
+                  {message.type === 'ai' && (
+                    <div className="flex items-center space-x-2 mb-1 sm:mb-2">
+                      <Bot className="h-4 w-4 text-blue-400" />
+                      <span className="text-xs text-blue-400 font-medium">Assistant IA</span>
+                    </div>
+                  )}
+                  <p className="text-xs sm:text-sm leading-relaxed">{message.content}</p>
+                </div>
+              </div>
+            ))}
+            
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-slate-700 text-slate-100 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl">
+                  <div className="flex items-center space-x-2">
+                    <Bot className="h-4 w-4 text-blue-400" />
+                    <span className="text-xs text-blue-400 font-medium">Assistant IA</span>
+                  </div>
+                  <div className="flex space-x-1 mt-1 sm:mt-2">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div className="border-t border-slate-700/50 p-3 sm:p-4">
+            <div className="flex space-x-2 sm:space-x-3">
+              <input
+                type="text"
+                value={currentMessage}
+                onChange={(e) => setCurrentMessage(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                placeholder="Posez votre question sur la cybersécurité..."
+                className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
+                disabled={isTyping}
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={!currentMessage.trim() || isTyping}
+                className="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              >
+                <Send className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Suggestions */}
+        <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Questions fréquentes :</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+            {[
+              "Comment créer un mot de passe sécurisé ?",
+              "Qu'est-ce que le phishing et comment l'éviter ?",
+              "Comment sécuriser mon WiFi à la maison ?",
+              "Qu'est-ce que l'authentification à deux facteurs ?",
+              "Comment protéger ma vie privée sur les réseaux sociaux ?",
+              "Pourquoi les mises à jour sont-elles importantes ?"
+            ].map((suggestion, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentMessage(suggestion)}
+                className="text-left p-2 sm:p-3 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors text-xs sm:text-sm"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Vue détail d'une section
+  if (selectedSectionData) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
+          <button
+            onClick={() => setSelectedSection(null)}
+            className="flex items-center space-x-1 sm:space-x-2 text-blue-400 hover:text-blue-300 transition-colors text-sm sm:text-base"
+          >
+            <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="hidden sm:inline">Retour aux guides</span>
+            <span className="sm:hidden">Retour</span>
+          </button>
+          
+          <div className="text-center">
+            <div className="flex items-center space-x-2 sm:space-x-3 justify-center">
+              <selectedSectionData.icon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{selectedSectionData.title}</h1>
+            </div>
+            <p className="text-blue-300 text-sm sm:text-base hidden sm:block">{selectedSectionData.description}</p>
+          </div>
+          
+          <div className="text-right">
+            <div className="text-lg sm:text-2xl font-bold text-blue-400">
+              {getCompletionPercentage(selectedSectionData.id)}%
+            </div>
+            <div className="text-slate-400 text-xs sm:text-sm">Complété</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+          {/* Risks */}
+          <div className="bg-red-900/20 border border-red-500/30 rounded-2xl p-4 sm:p-6 space-y-3 sm:space-y-4">
+            <h3 className="text-lg sm:text-xl font-bold text-red-300 flex items-center space-x-2">
+              <Shield className="h-5 w-5" />
+              <span>Risques Identifiés</span>
+            </h3>
+            
+            <div className="space-y-2 sm:space-y-3">
+              {selectedSectionData.risks.map((risk, index) => (
+                <div key={index} className="flex items-start space-x-2 sm:space-x-3">
+                  <div className="w-2 h-2 bg-red-400 rounded-full mt-3"></div>
+                  <p className="text-red-200 text-sm sm:text-base">{risk}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tips */}
+          <div className="bg-blue-900/20 border border-blue-500/30 rounded-2xl p-4 sm:p-6 space-y-3 sm:space-y-4">
+            <h3 className="text-lg sm:text-xl font-bold text-blue-300 flex items-center space-x-2">
+              <Eye className="h-5 w-5" />
+              <span>Conseils Essentiels</span>
+            </h3>
+            
+            <div className="space-y-2 sm:space-y-3">
+              {selectedSectionData.tips.map((tip, index) => (
+                <div key={index} className="flex items-start space-x-2 sm:space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-3"></div>
+                  <p className="text-blue-200 text-sm sm:text-base">{tip}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Practices Checklist */}
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-6">
+          <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-2 sm:space-x-3">
+            <CheckCircle2 className="h-6 w-6 text-green-400" />
+            <span>Checklist des Bonnes Pratiques</span>
+          </h3>
+          
+          <div className="space-y-3 sm:space-y-4">
+            {selectedSectionData.practices.map((practice, index) => (
+              <div
+                key={index}
+                className={`border-2 rounded-xl p-3 sm:p-4 transition-all duration-300 cursor-pointer ${
+                  checkedPractices.has(`${selectedSectionData.id}-${index}`)
+                    ? 'border-green-500 bg-green-500/10'
+                    : 'border-slate-600 bg-slate-700/30 hover:border-green-500/50'
+                }`}
+                onClick={() => handlePracticeToggle(selectedSectionData.id, index)}
+              >
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
+                    checkedPractices.has(`${selectedSectionData.id}-${index}`)
+                      ? 'border-green-500 bg-green-500'
+                      : 'border-slate-400'
+                  }`}>
+                    {checkedPractices.has(`${selectedSectionData.id}-${index}`) && (
+                      <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                    )}
+                  </div>
+                  
+                  <div className="flex-1">
+                    <h4 className={`font-semibold text-sm sm:text-base ${
+                      checkedPractices.has(`${selectedSectionData.id}-${index}`)
+                        ? 'text-green-300'
+                        : 'text-white'
+                    }`}>
+                      {practice.title}
+                    </h4>
+                    <p className="text-slate-300 mt-1 text-sm sm:text-base">{practice.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Vue principale avec option chat
+  return (
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <button
+          onClick={onBack}
+          className="flex items-center space-x-1 sm:space-x-2 text-blue-400 hover:text-blue-300 transition-colors text-sm sm:text-base"
+        >
+          <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span>Retour</span>
+        </button>
+        
+        <div className="text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">CyberGuide</h1>
+          <p className="text-blue-300 text-sm sm:text-base hidden sm:block">Guides pratiques de confidentialité</p>
+        </div>
+        
+        <button
+          onClick={() => setShowChat(true)}
+          className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+        >
+          <MessageCircle className="h-4 w-4" />
+          <span className="hidden sm:inline">Chat IA</span>
+          <span className="sm:hidden">IA</span>
+        </button>
+      </div>
+
+      {/* Guide Sections */}
+      <div className="space-y-6 sm:space-y-8">
+        <div className="text-center space-y-3 sm:space-y-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-white">
+            Choisissez un domaine à sécuriser
+          </h2>
+          <p className="text-slate-300 max-w-2xl mx-auto text-sm sm:text-base px-4">
+            Explorez nos guides détaillés pour améliorer votre confidentialité et sécurité dans chaque aspect de votre vie numérique, ou posez directement vos questions à notre assistant IA.
+          </p>
+        </div>
+
+        {/* Chat IA Card */}
+        <div
+          onClick={() => setShowChat(true)}
+          className="group cursor-pointer transform hover:scale-105 transition-all duration-300"
+        >
+          <div className="bg-gradient-to-r from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-4 sm:p-6 hover:border-green-500/50 transition-all duration-300">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-green-500/25 transition-all duration-300">
+                <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+              </div>
+              
+              <div className="flex-1">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2 group-hover:text-green-300 transition-colors">
+                  Assistant IA Cybersécurité
+                </h3>
+                <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
+                  Posez directement vos questions sur la cybersécurité et obtenez des réponses personnalisées et des conseils pratiques.
+                </p>
+              </div>
+              
+              <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 text-green-400 group-hover:text-green-300 transition-colors" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          {sections.map((section) => {
+            const completion = getCompletionPercentage(section.id);
+            
+            return (
+              <div
+                key={section.id}
+                onClick={() => setSelectedSection(section.id)}
+                className="group cursor-pointer transform hover:scale-105 transition-all duration-300"
+              >
+                <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 h-full">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
+                        <section.icon className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
+                      </div>
+                      
+                      {completion > 0 && (
+                        <div className="text-right">
+                          <div className="text-xs sm:text-sm font-semibold text-green-400">{completion}%</div>
+                          <div className="text-xs text-slate-400">Complété</div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2 group-hover:text-blue-300 transition-colors">
+                        {section.title}
+                      </h3>
+                      <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
+                        {section.description}
+                      </p>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-1 sm:pt-2">
+                      <div className="text-sm text-slate-400">
+                        {section.practices.length} pratiques à découvrir
+                      </div>
+                      
+                      <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                    </div>
+
+                    {completion > 0 && (
+                      <div className="w-full bg-slate-700 rounded-full h-1.5 sm:h-2">
+                        <div 
+                          className="bg-gradient-to-r from-green-500 to-blue-500 h-1.5 sm:h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${completion}%` }}
+                        ></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
