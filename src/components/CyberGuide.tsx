@@ -379,7 +379,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                   {message.type === 'ai' && (
                     <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                       <Bot className="h-4 w-4 text-blue-400" />
-                      <span className="text-xs text-blue-400 font-medium">Gemini</span>
+                      <span className="text-xs text-blue-400 font-medium">Assistant IA</span>
                     </div>
                   )}
                   <p className="text-xs sm:text-sm leading-relaxed">{message.content}</p>
