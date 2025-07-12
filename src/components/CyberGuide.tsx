@@ -433,11 +433,11 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
             {[
               "Comment créer un mot de passe sécurisé ?",
-              "Comment utiliser CyberQuest ?",
               "Comment sécuriser mon WiFi à la maison ?",
-              "À quoi sert CyberScan ?",
               "Comment reconnaître un phishing ?",
-              "Que contient CyberCoach AI ?"
+              "Qu'est-ce que le phishing et comment l'éviter ?",
+              "Comment protéger ma vie privée sur les réseaux sociaux ?",
+              "Pourquoi les mises à jour sont-elles importantes ?",
             ].map((suggestion, index) => (
               <button
                 key={index}
