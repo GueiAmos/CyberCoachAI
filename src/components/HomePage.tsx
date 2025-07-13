@@ -152,6 +152,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <p className="text-slate-300 text-sm">Explications simples et claires</p>
           </div>
         </div>
+        
+        {/* Developer Credit */}
+        <div className="mt-8 pt-6 border-t border-slate-700/50 text-center">
+          <p className="text-slate-400 text-sm">
+            Développé avec ❤️ par <span className="text-blue-400 font-medium">Guei Gnomblehi Amos</span>
+          </p>
+          <p className="text-slate-500 text-xs mt-1">
+            Expert en développement web et cybersécurité
+          </p>
+        </div>
       </div>
     </div>
   );

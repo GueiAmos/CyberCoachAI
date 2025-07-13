@@ -32,6 +32,9 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
             <p className="text-blue-300 text-xs sm:text-lg sm:block">
               Restez cyber-serein !
             </p>
+            <p className="text-slate-400 text-xs hidden sm:block">
+              Développé par Guei Gnomblehi Amos
+            </p>
           </div>
         </div>
 
