@@ -9,7 +9,7 @@ interface HomePageProps {
 export default function HomePage({ onNavigate }: HomePageProps) {
   const modules = [
     {
-      id: 'cyberquest' as Page,
+      id: 'cyberquest-desc' as Page,
       title: 'CyberQuest',
       subtitle: 'Jeu éducatif',
       description: 'Apprenez à repérer les cybermenaces à travers des scénarios réalistes et interactifs.',
@@ -18,7 +18,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       hoverColor: 'hover:from-green-600 hover:to-emerald-700'
     },
     {
-      id: 'cyberscan' as Page,
+      id: 'cyberscan-desc' as Page,
       title: 'CyberScan',
       subtitle: 'Auto-diagnostic',
       description: 'Évaluez votre niveau de sécurité numérique et recevez des conseils personnalisés.',
@@ -27,7 +27,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       hoverColor: 'hover:from-orange-600 hover:to-red-700'
     },
     {
-      id: 'cyberguide' as Page,
+      id: 'cyberguide-desc' as Page,
       title: 'CyberGuide',
       subtitle: 'Assistant intelligent',
       description: 'Découvrez comment mieux protéger votre vie privée en ligne avec des guides pratiques.',

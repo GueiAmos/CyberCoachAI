@@ -1,17 +1,42 @@
 import React, { useState } from 'react';
 import HomePage from './components/HomePage';
+import ModuleDescription from './components/ModuleDescription';
 import CyberQuest from './components/CyberQuest';
 import CyberScan from './components/CyberScan';
 import CyberGuide from './components/CyberGuide';
 import Header from './components/Header';
 
-export type Page = 'home' | 'cyberquest' | 'cyberscan' | 'cyberguide';
+export type Page = 'home' | 'cyberquest' | 'cyberscan' | 'cyberguide' | 'cyberquest-desc' | 'cyberscan-desc' | 'cyberguide-desc';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
 
   const renderPage = () => {
     switch (currentPage) {
+      case 'cyberquest-desc':
+        return (
+          <ModuleDescription 
+            module="cyberquest" 
+            onBack={() => setCurrentPage('home')} 
+            onStart={() => setCurrentPage('cyberquest')}
+          />
+        );
+      case 'cyberscan-desc':
+        return (
+          <ModuleDescription 
+            module="cyberscan" 
+            onBack={() => setCurrentPage('home')} 
+            onStart={() => setCurrentPage('cyberscan')}
+          />
+        );
+      case 'cyberguide-desc':
+        return (
+          <ModuleDescription 
+            module="cyberguide" 
+            onBack={() => setCurrentPage('home')} 
+            onStart={() => setCurrentPage('cyberguide')}
+          />
+        );
       case 'cyberquest':
         return <CyberQuest onBack={() => setCurrentPage('home')} />;
       case 'cyberscan':
