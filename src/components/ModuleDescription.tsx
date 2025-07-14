@@ -126,11 +126,7 @@ export default function ModuleDescription({ module, onBack, onStart }: ModuleDes
         <h2 className="text-xl sm:text-2xl font-bold text-white">{data.description}</h2>
         <p className="text-white/90 text-sm sm:text-base max-w-2xl mx-auto">{data.longDescription}</p>
         
-        <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 pt-4">
-          <div className="flex items-center space-x-2 text-white/80">
-            <Clock className="h-4 w-4" />
-            <span className="text-sm">{data.duration}</span>
-          </div>
+        <div className="flex items-center justify-center pt-4">
           <div className="flex items-center space-x-2 text-white/80">
             <Users className="h-4 w-4" />
             <span className="text-sm">{data.difficulty}</span>
