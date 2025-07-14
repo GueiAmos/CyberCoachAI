@@ -274,7 +274,7 @@ export default function CyberQuest({ onBack }: CyberQuestProps) {
                     </div>
                     
                     <div className="text-right">
-                      <div className="text-lg sm:text-xl font-bold text-blue-400">5</div>
+                      <div className="text-lg sm:text-xl font-bold text-blue-400">{category.count}</div>
                       <div className="text-xs sm:text-sm text-slate-400">scénarios</div>
                     </div>
                   </div>
