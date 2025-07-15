@@ -38,9 +38,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   ];
 
   const stats = [
-    { icon: Users, label: 'Utilisateurs formés', value: '100+' },
-    { icon: Shield, label: 'Scénarios disponibles', value: '20+' },
-    { icon: Award, label: 'Taux de réussite', value: '90%' }
+    { icon: Shield, label: 'Scénarios interactifs', value: '35' },
+    { icon: Users, label: 'Catégories de menaces', value: '7' },
+    { icon: Award, label: 'Modules de formation', value: '3' }
   ];
 
   return (
