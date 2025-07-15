@@ -381,42 +381,6 @@ export default function CyberScan({ onBack }: CyberScanProps) {
             </div>
           </div>
 
-          {/* Detailed Analysis */}
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-6">
-            <div className="flex items-center space-x-3">
-              <Target className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
-              <h3 className="text-2xl font-bold text-white">
-                Analyse Détaillée par Domaine
-              </h3>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {result.detailedAnalysis.map((analysis, index) => (
-                <div key={index} className={`p-4 rounded-xl border-2 ${
-                  analysis.status === 'good' ? 'border-green-500/30 bg-green-500/10' :
-                  analysis.status === 'warning' ? 'border-yellow-500/30 bg-yellow-500/10' :
-                  'border-red-500/30 bg-red-500/10'
-                }`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-white text-sm">{analysis.category}</h4>
-                    <div className="flex items-center space-x-1">
-                      {analysis.status === 'good' && <TrendingUp className="h-4 w-4 text-green-400" />}
-                      {analysis.status === 'warning' && <Minus className="h-4 w-4 text-yellow-400" />}
-                      {analysis.status === 'danger' && <TrendingDown className="h-4 w-4 text-red-400" />}
-                      <span className={`text-sm font-bold ${
-                        analysis.status === 'good' ? 'text-green-400' :
-                        analysis.status === 'warning' ? 'text-yellow-400' :
-                        'text-red-400'
-                      }`}>
-                        {analysis.score}/{analysis.maxScore}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-slate-300 text-xs">{analysis.advice}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Personalized Recommendations */}
           <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-6">
