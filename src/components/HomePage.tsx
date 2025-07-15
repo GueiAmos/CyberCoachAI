@@ -159,7 +159,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             Développé avec ❤️ par <span className="text-blue-400 font-medium">Guei Gnomblehi Amos</span>
           </p>
           <p className="text-slate-500 text-xs mt-1">
-            Expert en développement web et cybersécurité
+            Développeur d'application et technicien en cybersécurité
           </p>
         </div>
       </div>
