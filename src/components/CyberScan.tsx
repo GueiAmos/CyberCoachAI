@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CheckCircle, AlertTriangle, XCircle, RotateCcw, Target, Loader2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle, AlertTriangle, XCircle, RotateCcw, Target, Loader2, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { getScanQuestions, type ScanQuestion } from '../lib/supabase';
 
 interface CyberScanProps {
@@ -12,6 +12,13 @@ interface ScanResult {
   color: string;
   icon: React.ComponentType<any>;
   recommendations: string[];
+  detailedAnalysis: Array<{
+    category: string;
+    score: number;
+    maxScore: number;
+    status: 'good' | 'warning' | 'danger';
+    advice: string;
+  }>;
 }
 
 export default function CyberScan({ onBack }: CyberScanProps) {
@@ -64,17 +71,48 @@ export default function CyberScan({ onBack }: CyberScanProps) {
     const maxScore = questions.length * 3;
     const percentage = (totalScore / maxScore) * 100;
 
+    // Analyse détaillée par catégorie
+    const categoryAnalysis = questions.map((question, index) => {
+      const userScore = questions[index].options[answers[index]].score;
+      const category = getCategoryFromQuestion(question.question_text);
+      
+      let status: 'good' | 'warning' | 'danger' = 'good';
+      let advice = '';
+
+      if (userScore === 3) {
+        status = 'good';
+        advice = `Excellent ! Continuez sur cette voie pour ${category.toLowerCase()}.`;
+      } else if (userScore === 2) {
+        status = 'warning';
+        advice = `Bien, mais vous pouvez améliorer vos pratiques en ${category.toLowerCase()}.`;
+      } else if (userScore === 1) {
+        status = 'warning';
+        advice = `Attention ! Vos pratiques en ${category.toLowerCase()} nécessitent des améliorations.`;
+      } else {
+        status = 'danger';
+        advice = `Critique ! Vous devez immédiatement améliorer vos pratiques en ${category.toLowerCase()}.`;
+      }
+
+      return {
+        category,
+        score: userScore,
+        maxScore: 3,
+        status,
+        advice
+      };
+    });
+
+    // Générer des recommandations personnalisées basées sur les réponses
+    const recommendations = generatePersonalizedRecommendations(answers, questions);
+
     if (percentage >= 80) {
       return {
         score: Math.round(percentage),
         level: 'Élevé',
         color: 'text-green-400',
         icon: CheckCircle,
-        recommendations: [
-          "Excellent ! Continuez à maintenir ces bonnes pratiques de sécurité.",
-          "Restez informé des nouvelles menaces et techniques de protection.",
-          "Partagez vos connaissances avec votre entourage pour les sensibiliser."
-        ]
+        recommendations,
+        detailedAnalysis: categoryAnalysis
       };
     } else if (percentage >= 50) {
       return {
@@ -82,11 +120,8 @@ export default function CyberScan({ onBack }: CyberScanProps) {
         level: 'Moyen',
         color: 'text-yellow-400',
         icon: AlertTriangle,
-        recommendations: [
-          "Activez l'authentification à deux facteurs sur tous vos comptes importants.",
-          "Utilisez un gestionnaire de mots de passe pour créer des mots de passe uniques.",
-          "Soyez plus vigilant avec les emails suspects et vérifiez toujours la source."
-        ]
+        recommendations,
+        detailedAnalysis: categoryAnalysis
       };
     } else {
       return {
@@ -94,13 +129,129 @@ export default function CyberScan({ onBack }: CyberScanProps) {
         level: 'Faible',
         color: 'text-red-400',
         icon: XCircle,
-        recommendations: [
-          "Commencez par installer un gestionnaire de mots de passe et créez des mots de passe uniques.",
-          "Activez immédiatement l'authentification à deux facteurs sur vos comptes sensibles.",
-          "Méfiez-vous des emails suspects et ne cliquez jamais sur des liens douteux."
-        ]
+        recommendations,
+        detailedAnalysis: categoryAnalysis
       };
     }
+  };
+
+  const getCategoryFromQuestion = (questionText: string): string => {
+    if (questionText.includes('mot de passe')) return 'Gestion des mots de passe';
+    if (questionText.includes('authentification') || questionText.includes('2FA')) return 'Authentification à deux facteurs';
+    if (questionText.includes('mise à jour')) return 'Mises à jour de sécurité';
+    if (questionText.includes('email') || questionText.includes('phishing')) return 'Protection contre le phishing';
+    if (questionText.includes('Wi-Fi') || questionText.includes('réseau')) return 'Sécurité des réseaux';
+    if (questionText.includes('sauvegarde')) return 'Sauvegarde des données';
+    if (questionText.includes('réseaux sociaux')) return 'Confidentialité réseaux sociaux';
+    if (questionText.includes('antivirus')) return 'Protection antivirus';
+    if (questionText.includes('informations personnelles')) return 'Protection des données personnelles';
+    if (questionText.includes('formation') || questionText.includes('veille')) return 'Formation continue';
+    return 'Sécurité générale';
+  };
+
+  const generatePersonalizedRecommendations = (userAnswers: number[], questionsList: ScanQuestion[]): string[] => {
+    const recommendations: string[] = [];
+    const priorities: Array<{ priority: number; text: string }> = [];
+
+    userAnswers.forEach((answerIndex, questionIndex) => {
+      const question = questionsList[questionIndex];
+      const userScore = question.options[answerIndex].score;
+      const questionText = question.question_text;
+
+      // Recommandations spécifiques basées sur les réponses
+      if (questionText.includes('mot de passe') && userScore < 3) {
+        if (userScore === 0) {
+          priorities.push({
+            priority: 1,
+            text: "🚨 URGENT : Installez immédiatement un gestionnaire de mots de passe (Bitwarden, 1Password) et créez des mots de passe uniques pour tous vos comptes."
+          });
+        } else if (userScore === 1) {
+          priorities.push({
+            priority: 2,
+            text: "🔐 Améliorez vos mots de passe : utilisez au moins 12 caractères avec lettres, chiffres et symboles, et évitez la réutilisation."
+          });
+        } else {
+          priorities.push({
+            priority: 3,
+            text: "✅ Continuez à utiliser des mots de passe forts et envisagez un gestionnaire pour plus de sécurité."
+          });
+        }
+      }
+
+      if (questionText.includes('authentification') && userScore < 3) {
+        if (userScore === 0) {
+          priorities.push({
+            priority: 1,
+            text: "🚨 CRITIQUE : Activez immédiatement l'authentification à deux facteurs (2FA) sur tous vos comptes sensibles (email, banque, réseaux sociaux)."
+          });
+        } else if (userScore === 1) {
+          priorities.push({
+            priority: 2,
+            text: "🔒 Étendez la 2FA à tous vos comptes importants, pas seulement les plus sensibles."
+          });
+        }
+      }
+
+      if (questionText.includes('mise à jour') && userScore < 2) {
+        priorities.push({
+          priority: userScore === 0 ? 1 : 2,
+          text: "🔄 Activez les mises à jour automatiques pour votre système d'exploitation et vos applications critiques."
+        });
+      }
+
+      if (questionText.includes('email') && userScore < 2) {
+        priorities.push({
+          priority: 2,
+          text: "📧 Soyez plus vigilant avec les emails : vérifiez l'expéditeur, ne cliquez pas sur les liens suspects, et méfiez-vous des demandes urgentes."
+        });
+      }
+
+      if (questionText.includes('Wi-Fi') && userScore < 2) {
+        priorities.push({
+          priority: 2,
+          text: "📶 Évitez les Wi-Fi publics pour les données sensibles, utilisez un VPN ou votre connexion mobile."
+        });
+      }
+
+      if (questionText.includes('sauvegarde') && userScore < 2) {
+        priorities.push({
+          priority: 2,
+          text: "💾 Mettez en place une stratégie de sauvegarde régulière (règle 3-2-1 : 3 copies, 2 supports différents, 1 hors site)."
+        });
+      }
+
+      if (questionText.includes('réseaux sociaux') && userScore < 2) {
+        priorities.push({
+          priority: 3,
+          text: "🌐 Révisez vos paramètres de confidentialité sur les réseaux sociaux et limitez les informations publiques."
+        });
+      }
+
+      if (questionText.includes('antivirus') && userScore < 2) {
+        priorities.push({
+          priority: 2,
+          text: "🛡️ Installez et maintenez à jour un antivirus réputé, et effectuez des analyses régulières."
+        });
+      }
+
+      if (questionText.includes('informations personnelles') && userScore < 2) {
+        priorities.push({
+          priority: 2,
+          text: "🔒 Limitez le partage d'informations personnelles en ligne et vérifiez les paramètres de confidentialité de vos comptes."
+        });
+      }
+
+      if (questionText.includes('formation') && userScore < 2) {
+        priorities.push({
+          priority: 3,
+          text: "📚 Restez informé des nouvelles menaces en suivant des sources fiables de cybersécurité."
+        });
+      }
+    });
+
+    // Trier par priorité et prendre les 5 plus importantes
+    priorities.sort((a, b) => a.priority - b.priority);
+    return priorities.slice(0, 5).map(item => item.text);
   };
 
   const handleRestart = () => {
@@ -230,7 +381,44 @@ export default function CyberScan({ onBack }: CyberScanProps) {
             </div>
           </div>
 
-          {/* Recommendations */}
+          {/* Detailed Analysis */}
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-6">
+            <div className="flex items-center space-x-3">
+              <Target className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
+              <h3 className="text-2xl font-bold text-white">
+                Analyse Détaillée par Domaine
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {result.detailedAnalysis.map((analysis, index) => (
+                <div key={index} className={`p-4 rounded-xl border-2 ${
+                  analysis.status === 'good' ? 'border-green-500/30 bg-green-500/10' :
+                  analysis.status === 'warning' ? 'border-yellow-500/30 bg-yellow-500/10' :
+                  'border-red-500/30 bg-red-500/10'
+                }`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-white text-sm">{analysis.category}</h4>
+                    <div className="flex items-center space-x-1">
+                      {analysis.status === 'good' && <TrendingUp className="h-4 w-4 text-green-400" />}
+                      {analysis.status === 'warning' && <Minus className="h-4 w-4 text-yellow-400" />}
+                      {analysis.status === 'danger' && <TrendingDown className="h-4 w-4 text-red-400" />}
+                      <span className={`text-sm font-bold ${
+                        analysis.status === 'good' ? 'text-green-400' :
+                        analysis.status === 'warning' ? 'text-yellow-400' :
+                        'text-red-400'
+                      }`}>
+                        {analysis.score}/{analysis.maxScore}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-slate-300 text-xs">{analysis.advice}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Personalized Recommendations */}
           <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-6">
             <div className="flex items-center space-x-3">
               <Target className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />

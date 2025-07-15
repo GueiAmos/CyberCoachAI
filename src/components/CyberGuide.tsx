@@ -1,6 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
-import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot } from 'lucide-react';
+import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot, AlertTriangle, Users, Wifi, Grid3X3 } from 'lucide-react';
 
 interface CyberGuideProps {
   onBack: () => void;
@@ -10,6 +10,7 @@ interface GuideSection {
   id: string;
   title: string;
   icon: React.ComponentType<any>;
+  color: string;
   description: string;
   risks: string[];
   practices: Array<{
@@ -48,155 +49,276 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
 
   const sections: GuideSection[] = [
     {
-      id: 'social-media',
-      title: 'Réseaux Sociaux',
-      icon: Globe,
-      description: 'Protégez votre vie privée sur les plateformes sociales',
+      id: 'phishing',
+      title: 'Phishing',
+      icon: AlertTriangle,
+      color: 'from-red-500 to-red-600',
+      description: 'Apprenez à reconnaître les tentatives de phishing par email et SMS',
       risks: [
-        'Exposition d\'informations personnelles sensibles',
-        'Géolocalisation et traçage de vos activités',
-        'Utilisation de vos données à des fins commerciales',
-        'Harcèlement et usurpation d\'identité'
+        'Vol d\'identifiants de connexion (email, banque, réseaux sociaux)',
+        'Installation de logiciels malveillants via des liens piégés',
+        'Usurpation d\'identité et fraude financière',
+        'Compromission de comptes professionnels et personnels'
       ],
       practices: [
         {
-          title: 'Paramètres de confidentialité',
-          description: 'Configurez vos comptes en mode privé et limitez qui peut voir vos publications',
+          title: 'Vérification des expéditeurs',
+          description: 'Vérifiez toujours l\'adresse email de l\'expéditeur et méfiez-vous des domaines suspects',
           completed: false
         },
         {
-          title: 'Informations personnelles',
-          description: 'Évitez de partager votre adresse, numéro de téléphone ou informations sensibles',
+          title: 'Analyse des liens',
+          description: 'Survolez les liens sans cliquer pour voir la vraie destination',
           completed: false
         },
         {
-          title: 'Géolocalisation',
+          title: 'Méfiance des urgences',
+          description: 'Les vrais services ne demandent jamais d\'agir "immédiatement" par email',
+          completed: false
+        },
+        {
+          title: 'Authentification directe',
+          description: 'Connectez-vous directement sur le site officiel plutôt que via un lien',
+          completed: false
+        }
+      ],
+      tips: [
+        'Les banques ne demandent jamais vos codes par email',
+        'Méfiez-vous des fautes d\'orthographe dans les emails officiels'
+      ]
+    },
+    {
+      id: 'ingenierie-sociale',
+      title: 'Ingénierie Sociale',
+      icon: Users,
+      color: 'from-purple-500 to-purple-600',
+      description: 'Découvrez les techniques de manipulation psychologique des cybercriminels',
+      risks: [
+        'Manipulation psychologique pour obtenir des informations sensibles',
+        'Usurpation d\'identité par téléphone ou en personne',
+        'Accès non autorisé aux locaux ou systèmes d\'entreprise',
+        'Divulgation involontaire de données confidentielles'
+      ],
+      practices: [
+        {
+          title: 'Vérification d\'identité',
+          description: 'Demandez toujours une preuve d\'identité avant de partager des informations',
+          completed: false
+        },
+        {
+          title: 'Principe du moindre privilège',
+          description: 'Ne partagez que les informations strictement nécessaires',
+          completed: false
+        },
+        {
+          title: 'Méfiance des demandes urgentes',
+          description: 'Prenez le temps de vérifier les demandes pressantes',
+          completed: false
+        },
+        {
+          title: 'Formation de l\'entourage',
+          description: 'Sensibilisez votre famille et collègues aux techniques de manipulation',
+          completed: false
+        }
+      ],
+      tips: [
+        'Un vrai technicien ne demande jamais vos mots de passe',
+        'Méfiez-vous des appels "de votre banque" non sollicités'
+      ]
+    },
+    {
+      id: 'securite-wifi',
+      title: 'Sécurité Wi-Fi',
+      icon: Wifi,
+      color: 'from-blue-500 to-blue-600',
+      description: 'Maîtrisez les bonnes pratiques pour les connexions Wi-Fi publiques',
+      risks: [
+        'Interception de données sur les réseaux Wi-Fi non sécurisés',
+        'Attaques "Man-in-the-Middle" sur les hotspots publics',
+        'Vol de cookies et données de session',
+        'Accès non autorisé à vos appareils connectés'
+      ],
+      practices: [
+        {
+          title: 'Éviter les Wi-Fi ouverts',
+          description: 'Privilégiez votre connexion mobile pour les données sensibles',
+          completed: false
+        },
+        {
+          title: 'Utilisation d\'un VPN',
+          description: 'Activez un VPN fiable sur les réseaux publics',
+          completed: false
+        },
+        {
+          title: 'Vérification des noms de réseau',
+          description: 'Méfiez-vous des noms de Wi-Fi suspects ou trop génériques',
+          completed: false
+        },
+        {
+          title: 'Désactivation du partage',
+          description: 'Désactivez le partage de fichiers et l\'impression sur les réseaux publics',
+          completed: false
+        }
+      ],
+      tips: [
+        'Configurez votre Wi-Fi domestique en WPA3 ou WPA2',
+        'Changez le mot de passe par défaut de votre box internet'
+      ]
+    },
+    {
+      id: 'ransomware',
+      title: 'Ransomware',
+      icon: Shield,
+      color: 'from-orange-500 to-orange-600',
+      description: 'Protégez-vous contre les logiciels de rançon et leurs techniques',
+      risks: [
+        'Chiffrement de vos fichiers personnels et professionnels',
+        'Demande de rançon en cryptomonnaie pour récupérer vos données',
+        'Perte définitive de données importantes (photos, documents)',
+        'Propagation du ransomware sur le réseau d\'entreprise'
+      ],
+      practices: [
+        {
+          title: 'Sauvegardes régulières',
+          description: 'Effectuez des sauvegardes automatiques sur supports déconnectés',
+          completed: false
+        },
+        {
+          title: 'Mises à jour système',
+          description: 'Maintenez votre OS et logiciels à jour pour corriger les failles',
+          completed: false
+        },
+        {
+          title: 'Antivirus actif',
+          description: 'Utilisez un antivirus avec protection temps réel activée',
+          completed: false
+        },
+        {
+          title: 'Prudence avec les pièces jointes',
+          description: 'Ne jamais ouvrir de pièces jointes suspectes ou inattendues',
+          completed: false
+        }
+      ],
+      tips: [
+        'Ne payez jamais la rançon, cela encourage les criminels',
+        'Testez régulièrement vos sauvegardes pour vérifier qu\'elles fonctionnent'
+      ]
+    },
+    {
+      id: 'securite-mobile',
+      title: 'Sécurité Mobile',
+      icon: Smartphone,
+      color: 'from-green-500 to-green-600',
+      description: 'Sécurisez vos appareils mobiles et applications',
+      risks: [
+        'Accès non autorisé à vos données personnelles en cas de vol',
+        'Applications malveillantes espionnant vos activités',
+        'Vol de données bancaires via des apps frauduleuses',
+        'Géolocalisation et surveillance de vos déplacements'
+      ],
+      practices: [
+        {
+          title: 'Verrouillage sécurisé',
+          description: 'Utilisez un code PIN fort, empreinte ou reconnaissance faciale',
+          completed: false
+        },
+        {
+          title: 'Sources officielles',
+          description: 'Téléchargez uniquement depuis App Store ou Google Play Store',
+          completed: false
+        },
+        {
+          title: 'Gestion des permissions',
+          description: 'Vérifiez et limitez les autorisations accordées aux applications',
+          completed: false
+        },
+        {
+          title: 'Chiffrement des données',
+          description: 'Activez le chiffrement complet de votre appareil',
+          completed: false
+        }
+      ],
+      tips: [
+        'Activez la localisation à distance pour retrouver votre appareil',
+        'Configurez l\'effacement automatique après plusieurs tentatives échouées'
+      ]
+    },
+    {
+      id: 'malware',
+      title: 'Malware',
+      icon: AlertTriangle,
+      color: 'from-yellow-500 to-yellow-600',
+      description: 'Identifiez et évitez les logiciels malveillants',
+      risks: [
+        'Vol de données personnelles et professionnelles',
+        'Prise de contrôle à distance de votre ordinateur',
+        'Utilisation de votre machine pour des attaques (botnet)',
+        'Ralentissement et instabilité du système'
+      ],
+      practices: [
+        {
+          title: 'Antivirus à jour',
+          description: 'Installez un antivirus réputé et maintenez-le à jour',
+          completed: false
+        },
+        {
+          title: 'Sources fiables',
+          description: 'Téléchargez les logiciels uniquement depuis les sites officiels',
+          completed: false
+        },
+        {
+          title: 'Analyses régulières',
+          description: 'Programmez des analyses complètes hebdomadaires',
+          completed: false
+        },
+        {
+          title: 'Méfiance des cracks',
+          description: 'Évitez les logiciels piratés qui contiennent souvent des malwares',
+          completed: false
+        }
+      ],
+      tips: [
+        'Un ordinateur qui ralentit soudainement peut être infecté',
+        'Méfiez-vous des pop-ups qui prétendent nettoyer votre PC'
+      ]
+    },
+    {
+      id: 'reseaux-sociaux',
+      title: 'Réseaux Sociaux',
+      icon: Globe,
+      color: 'from-indigo-500 to-indigo-600',
+      description: 'Protégez votre vie privée sur les plateformes sociales',
+      risks: [
+        'Exposition d\'informations personnelles à des inconnus',
+        'Usurpation d\'identité via vos photos et informations',
+        'Géolocalisation et traçage de vos activités quotidiennes',
+        'Harcèlement et chantage basés sur vos publications'
+      ],
+      practices: [
+        {
+          title: 'Paramètres privés',
+          description: 'Configurez vos comptes en mode privé et limitez la visibilité',
+          completed: false
+        },
+        {
+          title: 'Informations minimales',
+          description: 'Ne partagez pas d\'adresse, numéro de téléphone ou informations sensibles',
+          completed: false
+        },
+        {
+          title: 'Géolocalisation désactivée',
           description: 'Désactivez le partage automatique de votre position',
           completed: false
         },
         {
-          title: 'Demandes d\'amis',
+          title: 'Contacts vérifiés',
           description: 'N\'acceptez que les personnes que vous connaissez réellement',
           completed: false
         }
       ],
       tips: [
-        'Vérifiez régulièrement vos paramètres de confidentialité',
-        'Réfléchissez avant de publier : cette information peut-elle me nuire ?'
-      ]
-    },
-    {
-      id: 'mobile',
-      title: 'Sécurité Mobile',
-      icon: Smartphone,
-      description: 'Sécurisez votre smartphone et vos applications',
-      risks: [
-        'Accès non autorisé à vos données personnelles',
-        'Applications malveillantes et espions',
-        'Vol de données bancaires et d\'identité',
-        'Écoute et surveillance de vos communications'
-      ],
-      practices: [
-        {
-          title: 'Verrouillage d\'écran',
-          description: 'Utilisez un code PIN, empreinte ou reconnaissance faciale sécurisé',
-          completed: false
-        },
-        {
-          title: 'Source des applications',
-          description: 'Téléchargez uniquement depuis les stores officiels (App Store, Google Play)',
-          completed: false
-        },
-        {
-          title: 'Permissions d\'applications',
-          description: 'Vérifiez et limitez les autorisations accordées à chaque application',
-          completed: false
-        },
-        {
-          title: 'Mises à jour',
-          description: 'Maintenez votre système et vos applications à jour',
-          completed: false
-        }
-      ],
-      tips: [
-        'Activez la localisation à distance en cas de perte',
-        'Évitez les réseaux WiFi publics pour les données sensibles'
-      ]
-    },
-    {
-      id: 'browser',
-      title: 'Navigation Web',
-      icon: Globe,
-      description: 'Naviguez en sécurité sur Internet',
-      risks: [
-        'Tracking publicitaire et profilage comportemental',
-        'Sites web malveillants et téléchargements infectés',
-        'Vol de cookies et données de session',
-        'Hameçonnage et sites frauduleux'
-      ],
-      practices: [
-        {
-          title: 'Navigateur sécurisé',
-          description: 'Utilisez un navigateur à jour avec des extensions de sécurité',
-          completed: false
-        },
-        {
-          title: 'Bloqueur de publicités',
-          description: 'Installez un bloqueur de pubs pour éviter les publicités malveillantes',
-          completed: false
-        },
-        {
-          title: 'Mode incognito',
-          description: 'Utilisez la navigation privée pour les recherches sensibles',
-          completed: false
-        },
-        {
-          title: 'Vérification d\'URL',
-          description: 'Vérifiez toujours l\'adresse des sites avant de saisir des informations',
-          completed: false
-        }
-      ],
-      tips: [
-        'Méfiez-vous des téléchargements automatiques',
-        'Utilisez un VPN pour une protection supplémentaire'
-      ]
-    },
-    {
-      id: 'passwords',
-      title: 'Gestion des Mots de Passe',
-      icon: Lock,
-      description: 'Créez et gérez des mots de passe sécurisés',
-      risks: [
-        'Piratage de comptes par force brute',
-        'Réutilisation de mots de passe compromis',
-        'Accès non autorisé à plusieurs services',
-        'Vol d\'identité et fraude financière'
-      ],
-      practices: [
-        {
-          title: 'Gestionnaire de mots de passe',
-          description: 'Utilisez un gestionnaire réputé comme Bitwarden, 1Password ou LastPass',
-          completed: false
-        },
-        {
-          title: 'Mots de passe uniques',
-          description: 'Créez un mot de passe différent pour chaque compte',
-          completed: false
-        },
-        {
-          title: 'Complexité',
-          description: 'Utilisez au moins 12 caractères avec lettres, chiffres et symboles',
-          completed: false
-        },
-        {
-          title: 'Authentification 2FA',
-          description: 'Activez la double authentification partout où c\'est possible',
-          completed: false
-        }
-      ],
-      tips: [
-        'Changez immédiatement les mots de passe par défaut',
-        'Évitez les informations personnelles dans vos mots de passe'
+        'Réfléchissez avant de publier : cette information peut-elle me nuire ?',
+        'Vérifiez régulièrement qui peut voir vos publications'
       ]
     }
   ];
@@ -633,7 +755,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {sections.map((section) => {
             const completion = getCompletionPercentage(section.id);
             
@@ -646,8 +768,8 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 h-full">
                   <div className="space-y-3 sm:space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
-                        <section.icon className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${section.color} rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all duration-300`}>
+                        <section.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
                       
                       {completion > 0 && (
