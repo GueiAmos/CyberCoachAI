@@ -607,36 +607,67 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-          {/* Risks */}
-          <div className="bg-red-900/20 border border-red-500/30 rounded-2xl p-4 sm:p-6 space-y-3 sm:space-y-4">
-            <h3 className="text-lg sm:text-xl font-bold text-red-300 flex items-center space-x-2">
-              <Shield className="h-5 w-5" />
-              <span>Risques Identifiés</span>
-            </h3>
+        {/* Hero Section avec gradient de la catégorie */}
+        <div className={`bg-gradient-to-r ${selectedSectionData.color} rounded-2xl p-6 sm:p-8 text-center space-y-4 mb-6`}>
+          <selectedSectionData.icon className="h-12 w-12 sm:h-16 sm:w-16 text-white mx-auto" />
+          <h2 className="text-xl sm:text-2xl font-bold text-white">{selectedSectionData.title}</h2>
+          <p className="text-white/90 text-sm sm:text-base max-w-2xl mx-auto">{selectedSectionData.description}</p>
+          
+          <div className="flex items-center justify-center space-x-6 pt-4">
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-white">{getCompletionPercentage(selectedSectionData.id)}%</div>
+              <div className="text-white/80 text-xs sm:text-sm">Progression</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-white">{selectedSectionData.practices.length}</div>
+              <div className="text-white/80 text-xs sm:text-sm">Pratiques</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sections en accordéon moderne */}
+        <div className="space-y-4 sm:space-y-6">
+          {/* Risques */}
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-red-500/20 to-red-600/20 border-b border-red-500/30 p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold text-red-300 flex items-center space-x-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                </div>
+                <span>Risques à Connaître</span>
+              </h3>
+            </div>
             
-            <div className="space-y-2 sm:space-y-3">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
               {selectedSectionData.risks.map((risk, index) => (
-                <div key={index} className="flex items-start space-x-2 sm:space-x-3">
-                  <div className="w-2 h-2 bg-red-400 rounded-full mt-3"></div>
-                  <p className="text-red-200 text-sm sm:text-base">{risk}</p>
+                <div key={index} className="flex items-start space-x-3 sm:space-x-4 p-3 sm:p-4 bg-red-500/5 border border-red-500/20 rounded-xl">
+                  <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xs mt-1">
+                    {index + 1}
+                  </div>
+                  <p className="text-red-200 text-sm sm:text-base leading-relaxed">{risk}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Tips */}
-          <div className="bg-blue-900/20 border border-blue-500/30 rounded-2xl p-4 sm:p-6 space-y-3 sm:space-y-4">
-            <h3 className="text-lg sm:text-xl font-bold text-blue-300 flex items-center space-x-2">
-              <Eye className="h-5 w-5" />
-              <span>Conseils Essentiels</span>
-            </h3>
+          {/* Conseils */}
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-b border-blue-500/30 p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold text-blue-300 flex items-center space-x-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                </div>
+                <span>Conseils d'Expert</span>
+              </h3>
+            </div>
             
-            <div className="space-y-2 sm:space-y-3">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
               {selectedSectionData.tips.map((tip, index) => (
-                <div key={index} className="flex items-start space-x-2 sm:space-x-3">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full mt-3"></div>
-                  <p className="text-blue-200 text-sm sm:text-base">{tip}</p>
+                <div key={index} className="flex items-start space-x-3 sm:space-x-4 p-3 sm:p-4 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <Eye className="h-4 w-4 text-white" />
+                  </div>
+                  <p className="text-blue-200 text-sm sm:text-base leading-relaxed">{tip}</p>
                 </div>
               ))}
             </div>
@@ -644,47 +675,78 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         </div>
 
         {/* Practices Checklist */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-6">
-          <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-2 sm:space-x-3">
-            <CheckCircle2 className="h-6 w-6 text-green-400" />
-            <span>Checklist des Bonnes Pratiques</span>
-          </h3>
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
+          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 border-b border-green-500/30 p-4 sm:p-6">
+            <h3 className="text-xl sm:text-2xl font-bold text-green-300 flex items-center space-x-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              </div>
+              <span>Plan d'Action - Checklist Interactive</span>
+            </h3>
+            <p className="text-green-200/80 text-sm mt-2">Cochez les pratiques que vous avez mises en place</p>
+          </div>
           
-          <div className="space-y-3 sm:space-y-4">
+          <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
             {selectedSectionData.practices.map((practice, index) => (
               <div
                 key={index}
-                className={`border-2 rounded-xl p-3 sm:p-4 transition-all duration-300 cursor-pointer ${
+                className={`border-2 rounded-xl p-4 sm:p-5 transition-all duration-300 cursor-pointer transform hover:scale-[1.02] ${
                   checkedPractices.has(`${selectedSectionData.id}-${index}`)
-                    ? 'border-green-500 bg-green-500/10'
-                    : 'border-slate-600 bg-slate-700/30 hover:border-green-500/50'
+                    ? 'border-green-500 bg-green-500/10 shadow-lg shadow-green-500/20'
+                    : 'border-slate-600 bg-slate-700/30 hover:border-green-500/50 hover:bg-green-500/5'
                 }`}
                 onClick={() => handlePracticeToggle(selectedSectionData.id, index)}
               >
                 <div className="flex items-start space-x-3 sm:space-x-4">
-                  <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
+                  <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
                     checkedPractices.has(`${selectedSectionData.id}-${index}`)
-                      ? 'border-green-500 bg-green-500'
-                      : 'border-slate-400'
+                      ? 'border-green-500 bg-green-500 shadow-lg shadow-green-500/30'
+                      : 'border-slate-400 hover:border-green-400'
                   }`}>
                     {checkedPractices.has(`${selectedSectionData.id}-${index}`) && (
-                      <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                      <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-white animate-pulse" />
                     )}
                   </div>
                   
                   <div className="flex-1">
-                    <h4 className={`font-semibold text-sm sm:text-base ${
+                    <h4 className={`font-semibold text-base sm:text-lg mb-2 ${
                       checkedPractices.has(`${selectedSectionData.id}-${index}`)
                         ? 'text-green-300'
                         : 'text-white'
                     }`}>
                       {practice.title}
                     </h4>
-                    <p className="text-slate-300 mt-1 text-sm sm:text-base">{practice.description}</p>
+                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed">{practice.description}</p>
+                    
+                    {checkedPractices.has(`${selectedSectionData.id}-${index}`) && (
+                      <div className="mt-2 flex items-center space-x-2 text-green-400">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span className="text-xs sm:text-sm font-medium">Pratique mise en place ✓</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             ))}
+            
+            {/* Progress Summary */}
+            <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-xl">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-green-300 font-semibold">Progression dans cette catégorie</span>
+                <span className="text-green-400 font-bold">{getCompletionPercentage(selectedSectionData.id)}%</span>
+              </div>
+              <div className="w-full bg-slate-700 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-green-500 to-green-400 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${getCompletionPercentage(selectedSectionData.id)}%` }}
+                ></div>
+              </div>
+              <p className="text-slate-400 text-xs mt-2">
+                {selectedSectionData.practices.filter((_, index) => 
+                  checkedPractices.has(`${selectedSectionData.id}-${index}`)
+                ).length} sur {selectedSectionData.practices.length} pratiques complétées
+              </p>
+            </div>
           </div>
         </div>
       </div>
