@@ -13,11 +13,6 @@ interface GuideSection {
   color: string;
   description: string;
   risks: string[];
-  practices: Array<{
-    title: string;
-    description: string;
-    completed: boolean;
-  }>;
   tips: string[];
 }
 
@@ -30,7 +25,6 @@ interface ChatMessage {
 
 export default function CyberGuide({ onBack }: CyberGuideProps) {
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
-  const [checkedPractices, setCheckedPractices] = useState<Set<string>>(new Set());
   const [showChat, setShowChat] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
@@ -58,33 +52,35 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         'Vol d\'identifiants de connexion (email, banque, réseaux sociaux)',
         'Installation de logiciels malveillants via des liens piégés',
         'Usurpation d\'identité et fraude financière',
-        'Compromission de comptes professionnels et personnels'
-      ],
-      practices: [
-        {
-          title: 'Vérification des expéditeurs',
-          description: 'Vérifiez toujours l\'adresse email de l\'expéditeur et méfiez-vous des domaines suspects',
-          completed: false
-        },
-        {
-          title: 'Analyse des liens',
-          description: 'Survolez les liens sans cliquer pour voir la vraie destination',
-          completed: false
-        },
-        {
-          title: 'Méfiance des urgences',
-          description: 'Les vrais services ne demandent jamais d\'agir "immédiatement" par email',
-          completed: false
-        },
-        {
-          title: 'Authentification directe',
-          description: 'Connectez-vous directement sur le site officiel plutôt que via un lien',
-          completed: false
-        }
+        'Compromission de comptes professionnels et personnels',
+        'Détournement de fonds via de fausses factures ou virements',
+        'Chantage et extorsion basés sur des informations volées',
+        'Propagation du phishing à vos contacts via votre compte compromis',
+        'Vol de données clients si vous êtes entrepreneur ou freelance',
+        'Accès non autorisé à vos comptes cloud (Google Drive, Dropbox)',
+        'Compromission de votre identité numérique sur plusieurs plateformes',
+        'Utilisation de vos comptes pour des activités illégales',
+        'Perte de contrôle de vos comptes de messagerie professionnelle',
+        'Accès à vos conversations privées et informations sensibles',
+        'Utilisation de vos données pour cibler vos proches et collègues'
       ],
       tips: [
         'Les banques ne demandent jamais vos codes par email',
-        'Méfiez-vous des fautes d\'orthographe dans les emails officiels'
+        'Méfiez-vous des fautes d\'orthographe dans les emails officiels',
+        'Vérifiez toujours l\'adresse email de l\'expéditeur en détail',
+        'Survolez les liens sans cliquer pour voir la vraie destination',
+        'Les vrais services ne demandent jamais d\'agir "immédiatement"',
+        'Connectez-vous directement sur le site officiel plutôt que via un lien',
+        'Méfiez-vous des emails avec des pièces jointes inattendues',
+        'Les entreprises légitimes utilisent votre nom, pas "Cher client"',
+        'Vérifiez les certificats SSL (cadenas vert) sur les sites web',
+        'Ne donnez jamais d\'informations sensibles par email ou SMS',
+        'Utilisez un gestionnaire de mots de passe qui détecte les faux sites',
+        'Activez les notifications de connexion sur vos comptes importants',
+        'Signalez les tentatives de phishing aux autorités compétentes',
+        'Formez votre entourage à reconnaître ces tentatives',
+        'Méfiez-vous des offres trop belles pour être vraies',
+        'Vérifiez les numéros de téléphone officiels avant de rappeler'
       ]
     },
     {
@@ -97,33 +93,35 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         'Manipulation psychologique pour obtenir des informations sensibles',
         'Usurpation d\'identité par téléphone ou en personne',
         'Accès non autorisé aux locaux ou systèmes d\'entreprise',
-        'Divulgation involontaire de données confidentielles'
-      ],
-      practices: [
-        {
-          title: 'Vérification d\'identité',
-          description: 'Demandez toujours une preuve d\'identité avant de partager des informations',
-          completed: false
-        },
-        {
-          title: 'Principe du moindre privilège',
-          description: 'Ne partagez que les informations strictement nécessaires',
-          completed: false
-        },
-        {
-          title: 'Méfiance des demandes urgentes',
-          description: 'Prenez le temps de vérifier les demandes pressantes',
-          completed: false
-        },
-        {
-          title: 'Formation de l\'entourage',
-          description: 'Sensibilisez votre famille et collègues aux techniques de manipulation',
-          completed: false
-        }
+        'Divulgation involontaire de données confidentielles',
+        'Chantage émotionnel pour extorquer de l\'argent ou des informations',
+        'Création de faux profils pour établir une relation de confiance',
+        'Exploitation de votre présence sur les réseaux sociaux',
+        'Utilisation d\'informations publiques pour paraître légitime',
+        'Manipulation lors d\'appels se faisant passer pour le support technique',
+        'Exploitation de situations d\'urgence ou de stress',
+        'Utilisation de votre nom pour tromper vos contacts',
+        'Infiltration de groupes professionnels ou personnels',
+        'Exploitation de votre générosité ou empathie',
+        'Création de fausses urgences familiales ou médicales'
       ],
       tips: [
         'Un vrai technicien ne demande jamais vos mots de passe',
-        'Méfiez-vous des appels "de votre banque" non sollicités'
+        'Méfiez-vous des appels "de votre banque" non sollicités',
+        'Demandez toujours une preuve d\'identité avant de partager des informations',
+        'Ne partagez que les informations strictement nécessaires',
+        'Prenez le temps de vérifier les demandes pressantes',
+        'Sensibilisez votre famille et collègues aux techniques de manipulation',
+        'Méfiez-vous des personnes trop insistantes ou pressantes',
+        'Vérifiez l\'identité par un canal de communication différent',
+        'Ne donnez jamais d\'informations par téléphone si vous n\'avez pas appelé',
+        'Méfiez-vous des compliments excessifs ou de la flatterie',
+        'Établissez des procédures de vérification avec votre famille',
+        'Ne cliquez jamais sur des liens dans des messages suspects',
+        'Méfiez-vous des demandes d\'aide urgente par message',
+        'Vérifiez les informations auprès de sources officielles',
+        'Ne partagez pas trop d\'informations personnelles en ligne',
+        'Soyez prudent avec les inconnus qui semblent tout savoir sur vous'
       ]
     },
     {
@@ -136,33 +134,35 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         'Interception de données sur les réseaux Wi-Fi non sécurisés',
         'Attaques "Man-in-the-Middle" sur les hotspots publics',
         'Vol de cookies et données de session',
-        'Accès non autorisé à vos appareils connectés'
-      ],
-      practices: [
-        {
-          title: 'Éviter les Wi-Fi ouverts',
-          description: 'Privilégiez votre connexion mobile pour les données sensibles',
-          completed: false
-        },
-        {
-          title: 'Utilisation d\'un VPN',
-          description: 'Activez un VPN fiable sur les réseaux publics',
-          completed: false
-        },
-        {
-          title: 'Vérification des noms de réseau',
-          description: 'Méfiez-vous des noms de Wi-Fi suspects ou trop génériques',
-          completed: false
-        },
-        {
-          title: 'Désactivation du partage',
-          description: 'Désactivez le partage de fichiers et l\'impression sur les réseaux publics',
-          completed: false
-        }
+        'Accès non autorisé à vos appareils connectés',
+        'Création de faux points d\'accès Wi-Fi pour piéger les utilisateurs',
+        'Injection de malwares via des réseaux compromis',
+        'Surveillance de votre activité de navigation en temps réel',
+        'Vol d\'identifiants de connexion transmis en clair',
+        'Accès à vos fichiers partagés sur le réseau local',
+        'Détournement de vos communications (emails, messages)',
+        'Installation à distance de logiciels espions',
+        'Utilisation de votre connexion pour des activités illégales',
+        'Accès à vos comptes automatiquement connectés',
+        'Compromission de vos appareils IoT (objets connectés)'
       ],
       tips: [
         'Configurez votre Wi-Fi domestique en WPA3 ou WPA2',
-        'Changez le mot de passe par défaut de votre box internet'
+        'Changez le mot de passe par défaut de votre box internet',
+        'Privilégiez votre connexion mobile pour les données sensibles',
+        'Activez un VPN fiable sur les réseaux publics',
+        'Méfiez-vous des noms de Wi-Fi suspects ou trop génériques',
+        'Désactivez le partage de fichiers sur les réseaux publics',
+        'Utilisez uniquement des sites HTTPS sur les Wi-Fi publics',
+        'Désactivez la connexion automatique aux réseaux Wi-Fi',
+        'Vérifiez le nom exact du réseau auprès du personnel',
+        'Évitez les opérations bancaires sur les Wi-Fi publics',
+        'Activez le pare-feu de votre appareil',
+        'Déconnectez-vous complètement quand vous partez',
+        'Utilisez l\'authentification à deux facteurs sur vos comptes',
+        'Mettez à jour régulièrement vos appareils',
+        'Surveillez les appareils connectés à votre réseau domestique',
+        'Créez un réseau invité séparé chez vous'
       ]
     },
     {
@@ -175,33 +175,35 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         'Chiffrement de vos fichiers personnels et professionnels',
         'Demande de rançon en cryptomonnaie pour récupérer vos données',
         'Perte définitive de données importantes (photos, documents)',
-        'Propagation du ransomware sur le réseau d\'entreprise'
-      ],
-      practices: [
-        {
-          title: 'Sauvegardes régulières',
-          description: 'Effectuez des sauvegardes automatiques sur supports déconnectés',
-          completed: false
-        },
-        {
-          title: 'Mises à jour système',
-          description: 'Maintenez votre OS et logiciels à jour pour corriger les failles',
-          completed: false
-        },
-        {
-          title: 'Antivirus actif',
-          description: 'Utilisez un antivirus avec protection temps réel activée',
-          completed: false
-        },
-        {
-          title: 'Prudence avec les pièces jointes',
-          description: 'Ne jamais ouvrir de pièces jointes suspectes ou inattendues',
-          completed: false
-        }
+        'Propagation du ransomware sur le réseau d\'entreprise',
+        'Vol de données avant chiffrement pour double extorsion',
+        'Publication de vos données privées sur le dark web',
+        'Arrêt complet de votre activité professionnelle',
+        'Coûts de récupération et de remise en état très élevés',
+        'Perte de confiance de vos clients et partenaires',
+        'Sanctions légales en cas de données clients compromises',
+        'Infection des sauvegardes connectées au réseau',
+        'Destruction malveillante des données même après paiement',
+        'Utilisation de vos systèmes pour attaquer d\'autres victimes',
+        'Compromission de votre réputation professionnelle'
       ],
       tips: [
         'Ne payez jamais la rançon, cela encourage les criminels',
-        'Testez régulièrement vos sauvegardes pour vérifier qu\'elles fonctionnent'
+        'Testez régulièrement vos sauvegardes pour vérifier qu\'elles fonctionnent',
+        'Effectuez des sauvegardes automatiques sur supports déconnectés',
+        'Maintenez votre OS et logiciels à jour pour corriger les failles',
+        'Utilisez un antivirus avec protection temps réel activée',
+        'Ne jamais ouvrir de pièces jointes suspectes ou inattendues',
+        'Appliquez la règle 3-2-1 : 3 copies, 2 supports, 1 hors site',
+        'Isolez immédiatement un appareil infecté du réseau',
+        'Formez vos employés à reconnaître les tentatives d\'infection',
+        'Utilisez des comptes avec privilèges limités au quotidien',
+        'Activez la protection contre les macros dans Office',
+        'Surveillez les extensions de fichiers inhabituelles',
+        'Mettez en place une politique de sécurité stricte',
+        'Utilisez des solutions de détection comportementale',
+        'Préparez un plan de réponse aux incidents',
+        'Contactez immédiatement les autorités en cas d\'attaque'
       ]
     },
     {
@@ -214,33 +216,35 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         'Accès non autorisé à vos données personnelles en cas de vol',
         'Applications malveillantes espionnant vos activités',
         'Vol de données bancaires via des apps frauduleuses',
-        'Géolocalisation et surveillance de vos déplacements'
-      ],
-      practices: [
-        {
-          title: 'Verrouillage sécurisé',
-          description: 'Utilisez un code PIN fort, empreinte ou reconnaissance faciale',
-          completed: false
-        },
-        {
-          title: 'Sources officielles',
-          description: 'Téléchargez uniquement depuis App Store ou Google Play Store',
-          completed: false
-        },
-        {
-          title: 'Gestion des permissions',
-          description: 'Vérifiez et limitez les autorisations accordées aux applications',
-          completed: false
-        },
-        {
-          title: 'Chiffrement des données',
-          description: 'Activez le chiffrement complet de votre appareil',
-          completed: false
-        }
+        'Géolocalisation et surveillance de vos déplacements',
+        'Interception de vos communications (appels, SMS, messages)',
+        'Accès à vos photos et vidéos privées',
+        'Vol d\'identité via les informations stockées sur l\'appareil',
+        'Utilisation de votre appareil pour des attaques sur d\'autres systèmes',
+        'Accès à vos comptes email et réseaux sociaux',
+        'Surveillance de vos habitudes et création de profils détaillés',
+        'Chantage basé sur vos données personnelles',
+        'Utilisation frauduleuse de vos applications de paiement',
+        'Accès à vos contacts et harcèlement de votre entourage',
+        'Installation de logiciels espions à votre insu'
       ],
       tips: [
         'Activez la localisation à distance pour retrouver votre appareil',
-        'Configurez l\'effacement automatique après plusieurs tentatives échouées'
+        'Configurez l\'effacement automatique après plusieurs tentatives échouées',
+        'Utilisez un code PIN fort, empreinte ou reconnaissance faciale',
+        'Téléchargez uniquement depuis App Store ou Google Play Store',
+        'Vérifiez et limitez les autorisations accordées aux applications',
+        'Activez le chiffrement complet de votre appareil',
+        'Mettez à jour régulièrement votre système d\'exploitation',
+        'Évitez les réseaux Wi-Fi publics pour les données sensibles',
+        'Utilisez des applications de messagerie chiffrées',
+        'Désactivez la géolocalisation pour les apps non essentielles',
+        'Vérifiez régulièrement les applications installées',
+        'Utilisez un gestionnaire de mots de passe mobile',
+        'Activez les notifications de connexion suspecte',
+        'Ne stockez pas de mots de passe dans les navigateurs mobiles',
+        'Méfiez-vous des QR codes inconnus',
+        'Sauvegardez régulièrement vos données importantes'
       ]
     },
     {
@@ -253,33 +257,35 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         'Vol de données personnelles et professionnelles',
         'Prise de contrôle à distance de votre ordinateur',
         'Utilisation de votre machine pour des attaques (botnet)',
-        'Ralentissement et instabilité du système'
-      ],
-      practices: [
-        {
-          title: 'Antivirus à jour',
-          description: 'Installez un antivirus réputé et maintenez-le à jour',
-          completed: false
-        },
-        {
-          title: 'Sources fiables',
-          description: 'Téléchargez les logiciels uniquement depuis les sites officiels',
-          completed: false
-        },
-        {
-          title: 'Analyses régulières',
-          description: 'Programmez des analyses complètes hebdomadaires',
-          completed: false
-        },
-        {
-          title: 'Méfiance des cracks',
-          description: 'Évitez les logiciels piratés qui contiennent souvent des malwares',
-          completed: false
-        }
+        'Ralentissement et instabilité du système',
+        'Enregistrement secret de vos frappes clavier (keylogger)',
+        'Capture d\'écran et surveillance de vos activités',
+        'Vol de mots de passe et informations bancaires',
+        'Installation d\'autres malwares plus dangereux',
+        'Utilisation de votre ordinateur pour miner des cryptomonnaies',
+        'Corruption ou suppression de vos fichiers importants',
+        'Désactivation de vos protections antivirus',
+        'Ouverture de portes dérobées pour les cybercriminels',
+        'Spam et envoi de malwares à vos contacts',
+        'Chantage et extorsion basés sur vos données volées'
       ],
       tips: [
         'Un ordinateur qui ralentit soudainement peut être infecté',
-        'Méfiez-vous des pop-ups qui prétendent nettoyer votre PC'
+        'Méfiez-vous des pop-ups qui prétendent nettoyer votre PC',
+        'Installez un antivirus réputé et maintenez-le à jour',
+        'Téléchargez les logiciels uniquement depuis les sites officiels',
+        'Programmez des analyses complètes hebdomadaires',
+        'Évitez les logiciels piratés qui contiennent souvent des malwares',
+        'Méfiez-vous des clés USB trouvées ou d\'origine inconnue',
+        'Activez le pare-feu de votre système d\'exploitation',
+        'Ne cliquez jamais sur des publicités suspectes',
+        'Vérifiez les certificats numériques des logiciels',
+        'Utilisez un compte utilisateur standard, pas administrateur',
+        'Surveillez l\'utilisation de votre processeur et réseau',
+        'Méfiez-vous des emails avec pièces jointes exécutables',
+        'Maintenez tous vos logiciels à jour',
+        'Utilisez des extensions de navigateur pour bloquer les publicités',
+        'Effectuez des sauvegardes régulières de vos données importantes'
       ]
     },
     {
@@ -292,49 +298,39 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         'Exposition d\'informations personnelles à des inconnus',
         'Usurpation d\'identité via vos photos et informations',
         'Géolocalisation et traçage de vos activités quotidiennes',
-        'Harcèlement et chantage basés sur vos publications'
-      ],
-      practices: [
-        {
-          title: 'Paramètres privés',
-          description: 'Configurez vos comptes en mode privé et limitez la visibilité',
-          completed: false
-        },
-        {
-          title: 'Informations minimales',
-          description: 'Ne partagez pas d\'adresse, numéro de téléphone ou informations sensibles',
-          completed: false
-        },
-        {
-          title: 'Géolocalisation désactivée',
-          description: 'Désactivez le partage automatique de votre position',
-          completed: false
-        },
-        {
-          title: 'Contacts vérifiés',
-          description: 'N\'acceptez que les personnes que vous connaissez réellement',
-          completed: false
-        }
+        'Harcèlement et chantage basés sur vos publications',
+        'Utilisation de vos données pour des arnaques ciblées',
+        'Création de faux profils utilisant votre identité',
+        'Surveillance de vos habitudes par des employeurs potentiels',
+        'Exploitation de vos relations pour des attaques d\'ingénierie sociale',
+        'Vol d\'informations pour répondre à vos questions de sécurité',
+        'Ciblage publicitaire excessif et manipulation',
+        'Exposition de vos proches et famille aux cybercriminels',
+        'Utilisation de vos photos pour des deepfakes',
+        'Chantage basé sur vos activités en ligne',
+        'Discrimination basée sur vos opinions ou activités'
       ],
       tips: [
         'Réfléchissez avant de publier : cette information peut-elle me nuire ?',
-        'Vérifiez régulièrement qui peut voir vos publications'
+        'Vérifiez régulièrement qui peut voir vos publications',
+        'Configurez vos comptes en mode privé et limitez la visibilité',
+        'Ne partagez pas d\'adresse, numéro de téléphone ou informations sensibles',
+        'Désactivez le partage automatique de votre position',
+        'N\'acceptez que les personnes que vous connaissez réellement',
+        'Utilisez des pseudonymes plutôt que votre vrai nom si possible',
+        'Évitez de publier vos horaires et habitudes quotidiennes',
+        'Ne partagez jamais de photos de documents officiels',
+        'Méfiez-vous des quiz et jeux qui demandent trop d\'informations',
+        'Vérifiez les paramètres de confidentialité après chaque mise à jour',
+        'Limitez les informations visibles sur votre profil public',
+        'Ne géolocalisez pas votre domicile ou lieu de travail',
+        'Supprimez régulièrement vos anciennes publications',
+        'Méfiez-vous des demandes d\'amis de personnes inconnues',
+        'Utilisez l\'authentification à deux facteurs sur tous vos comptes'
       ]
     }
   ];
 
-  const handlePracticeToggle = (sectionId: string, practiceIndex: number) => {
-    const key = `${sectionId}-${practiceIndex}`;
-    const newChecked = new Set(checkedPractices);
-    
-    if (newChecked.has(key)) {
-      newChecked.delete(key);
-    } else {
-      newChecked.add(key);
-    }
-    
-    setCheckedPractices(newChecked);
-  };
 
   const handleSendMessage = async () => {
     if (!currentMessage.trim()) return;
@@ -441,16 +437,6 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     ? sections.find(s => s.id === selectedSection)
     : null;
 
-  const getCompletionPercentage = (sectionId: string) => {
-    const section = sections.find(s => s.id === sectionId);
-    if (!section) return 0;
-    
-    const completed = section.practices.filter((_, index) => 
-      checkedPractices.has(`${sectionId}-${index}`)
-    ).length;
-    
-    return Math.round((completed / section.practices.length) * 100);
-  };
 
   // Vue Chat IA
   if (showChat) {
@@ -599,12 +585,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
             <p className="text-blue-300 text-sm sm:text-base hidden sm:block">{selectedSectionData.description}</p>
           </div>
           
-          <div className="text-right">
-            <div className="text-lg sm:text-2xl font-bold text-blue-400">
-              {getCompletionPercentage(selectedSectionData.id)}%
-            </div>
-            <div className="text-slate-400 text-xs sm:text-sm">Complété</div>
-          </div>
+          <div className="w-16 sm:w-20"></div>
         </div>
 
         {/* Hero Section avec gradient de la catégorie */}
@@ -613,14 +594,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <h2 className="text-xl sm:text-2xl font-bold text-white">{selectedSectionData.title}</h2>
           <p className="text-white/90 text-sm sm:text-base max-w-2xl mx-auto">{selectedSectionData.description}</p>
           
-          <div className="flex items-center justify-center space-x-6 pt-4">
+          <div className="flex items-center justify-center pt-4">
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-white">{getCompletionPercentage(selectedSectionData.id)}%</div>
-              <div className="text-white/80 text-xs sm:text-sm">Progression</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-white">{selectedSectionData.practices.length}</div>
-              <div className="text-white/80 text-xs sm:text-sm">Pratiques</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white">{selectedSectionData.risks.length + selectedSectionData.tips.length}</div>
+              <div className="text-white/80 text-xs sm:text-sm">Conseils et risques</div>
             </div>
           </div>
         </div>
@@ -636,6 +613,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 </div>
                 <span>Risques à Connaître</span>
               </h3>
+              <p className="text-red-200/80 text-sm mt-2">Comprenez les dangers pour mieux vous protéger</p>
             </div>
             
             <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
@@ -659,6 +637,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 </div>
                 <span>Conseils d'Expert</span>
               </h3>
+              <p className="text-blue-200/80 text-sm mt-2">Appliquez ces bonnes pratiques au quotidien</p>
             </div>
             
             <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
@@ -674,81 +653,6 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           </div>
         </div>
 
-        {/* Practices Checklist */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
-          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 border-b border-green-500/30 p-4 sm:p-6">
-            <h3 className="text-xl sm:text-2xl font-bold text-green-300 flex items-center space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-              </div>
-              <span>Plan d'Action - Checklist Interactive</span>
-            </h3>
-            <p className="text-green-200/80 text-sm mt-2">Cochez les pratiques que vous avez mises en place</p>
-          </div>
-          
-          <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-            {selectedSectionData.practices.map((practice, index) => (
-              <div
-                key={index}
-                className={`border-2 rounded-xl p-4 sm:p-5 transition-all duration-300 cursor-pointer transform hover:scale-[1.02] ${
-                  checkedPractices.has(`${selectedSectionData.id}-${index}`)
-                    ? 'border-green-500 bg-green-500/10 shadow-lg shadow-green-500/20'
-                    : 'border-slate-600 bg-slate-700/30 hover:border-green-500/50 hover:bg-green-500/5'
-                }`}
-                onClick={() => handlePracticeToggle(selectedSectionData.id, index)}
-              >
-                <div className="flex items-start space-x-3 sm:space-x-4">
-                  <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center mt-1 transition-all ${
-                    checkedPractices.has(`${selectedSectionData.id}-${index}`)
-                      ? 'border-green-500 bg-green-500 shadow-lg shadow-green-500/30'
-                      : 'border-slate-400 hover:border-green-400'
-                  }`}>
-                    {checkedPractices.has(`${selectedSectionData.id}-${index}`) && (
-                      <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-white animate-pulse" />
-                    )}
-                  </div>
-                  
-                  <div className="flex-1">
-                    <h4 className={`font-semibold text-base sm:text-lg mb-2 ${
-                      checkedPractices.has(`${selectedSectionData.id}-${index}`)
-                        ? 'text-green-300'
-                        : 'text-white'
-                    }`}>
-                      {practice.title}
-                    </h4>
-                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed">{practice.description}</p>
-                    
-                    {checkedPractices.has(`${selectedSectionData.id}-${index}`) && (
-                      <div className="mt-2 flex items-center space-x-2 text-green-400">
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span className="text-xs sm:text-sm font-medium">Pratique mise en place ✓</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {/* Progress Summary */}
-            <div className="mt-6 p-4 bg-green-500/5 border border-green-500/20 rounded-xl">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-green-300 font-semibold">Progression dans cette catégorie</span>
-                <span className="text-green-400 font-bold">{getCompletionPercentage(selectedSectionData.id)}%</span>
-              </div>
-              <div className="w-full bg-slate-700 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-green-500 to-green-400 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${getCompletionPercentage(selectedSectionData.id)}%` }}
-                ></div>
-              </div>
-              <p className="text-slate-400 text-xs mt-2">
-                {selectedSectionData.practices.filter((_, index) => 
-                  checkedPractices.has(`${selectedSectionData.id}-${index}`)
-                ).length} sur {selectedSectionData.practices.length} pratiques complétées
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
@@ -819,8 +723,6 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {sections.map((section) => {
-            const completion = getCompletionPercentage(section.id);
-            
             return (
               <div
                 key={section.id}
@@ -834,12 +736,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                         <section.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
                       
-                      {completion > 0 && (
-                        <div className="text-right">
-                          <div className="text-xs sm:text-sm font-semibold text-green-400">{completion}%</div>
-                          <div className="text-xs text-slate-400">Complété</div>
-                        </div>
-                      )}
+                      <div className="text-right">
+                        <div className="text-xs sm:text-sm font-semibold text-blue-400">{section.risks.length + section.tips.length}</div>
+                        <div className="text-xs text-slate-400">Conseils</div>
+                      </div>
                     </div>
                     
                     <div>
@@ -853,20 +753,12 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                     
                     <div className="flex items-center justify-between pt-1 sm:pt-2">
                       <div className="text-sm text-slate-400">
-                        {section.practices.length} pratiques à découvrir
+                        {section.risks.length} risques • {section.tips.length} conseils
                       </div>
                       
                       <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400 group-hover:text-blue-300 transition-colors" />
                     </div>
 
-                    {completion > 0 && (
-                      <div className="w-full bg-slate-700 rounded-full h-1.5 sm:h-2">
-                        <div 
-                          className="bg-gradient-to-r from-green-500 to-blue-500 h-1.5 sm:h-2 rounded-full transition-all duration-500"
-                          style={{ width: `${completion}%` }}
-                        ></div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
