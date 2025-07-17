@@ -1,6 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
-import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot, AlertTriangle, Users, Wifi, Grid3X3 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot, AlertTriangle, Users, Wifi, Grid3X3, Mic, MicOff } from 'lucide-react';
 
 interface CyberGuideProps {
   onBack: () => void;
@@ -40,6 +40,9 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     role: 'user' | 'assistant';
     content: string;
   }>>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
 
   const sections: GuideSection[] = [
     {
@@ -433,6 +436,115 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     setCurrentMessage('');
   };
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        await processVoiceMessage(audioBlob);
+        
+        // Nettoyer le stream
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      setMediaRecorder(recorder);
+      setAudioChunks(chunks);
+      setIsRecording(true);
+      recorder.start();
+    } catch (error) {
+      console.error('Erreur lors de l\'accès au microphone:', error);
+      alert('Impossible d\'accéder au microphone. Vérifiez les permissions de votre navigateur.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      setIsRecording(false);
+      setMediaRecorder(null);
+    }
+  };
+
+  const processVoiceMessage = async (audioBlob: Blob) => {
+    try {
+      setIsTyping(true);
+      
+      // Créer FormData pour envoyer l'audio
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'voice-message.webm');
+      formData.append('conversationHistory', JSON.stringify(conversationHistory.slice(-10)));
+
+      // Appeler notre edge function pour traiter l'audio
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/voice-chat`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors du traitement vocal');
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Ajouter le message utilisateur (transcrit)
+      const userMessage: ChatMessage = {
+        id: Date.now().toString(),
+        type: 'user',
+        content: data.transcription,
+        timestamp: new Date()
+      };
+
+      setChatMessages(prev => [...prev, userMessage]);
+      
+      // Ajouter la réponse IA
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: data.response,
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, aiMessage]);
+      
+      // Mettre à jour l'historique
+      setConversationHistory(prev => [
+        ...prev,
+        { role: 'user', content: data.transcription },
+        { role: 'assistant', content: data.response }
+      ]);
+      
+    } catch (error) {
+      console.error('Erreur lors du traitement vocal:', error);
+      
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: "Désolé, je n'ai pas pu traiter votre message vocal. Vous pouvez réessayer ou taper votre question. 🎤",
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
   const selectedSectionData = selectedSection 
     ? sections.find(s => s.id === selectedSection)
     : null;
@@ -524,6 +636,25 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
                 disabled={isTyping}
               />
+              
+              {/* Bouton vocal */}
+              <button
+                onClick={isRecording ? stopRecording : startRecording}
+                disabled={isTyping}
+                className={`px-3 sm:px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isRecording 
+                    ? 'bg-red-600 hover:bg-red-700 animate-pulse' 
+                    : 'bg-green-600 hover:bg-green-700'
+                } disabled:bg-slate-600 disabled:cursor-not-allowed text-white`}
+                title={isRecording ? 'Arrêter l\'enregistrement' : 'Enregistrer un message vocal'}
+              >
+                {isRecording ? (
+                  <MicOff className="h-4 w-4" />
+                ) : (
+                  <Mic className="h-4 w-4" />
+                )}
+              </button>
+              
               <button
                 onClick={handleSendMessage}
                 disabled={!currentMessage.trim() || isTyping}
@@ -532,6 +663,14 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 <Send className="h-4 w-4" />
               </button>
             </div>
+            
+            {/* Indicateur d'enregistrement */}
+            {isRecording && (
+              <div className="mt-2 flex items-center justify-center space-x-2 text-red-400">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-sm">Enregistrement en cours... Cliquez sur le micro pour arrêter</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -550,12 +689,20 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               <button
                 key={index}
                 onClick={() => setCurrentMessage(suggestion)}
-                disabled={isTyping}
+                disabled={isTyping || isRecording}
                 className="text-left p-2 sm:p-3 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors text-xs sm:text-sm"
               >
                 {suggestion}
               </button>
             ))}
+          </div>
+          
+          {/* Instructions vocales */}
+          <div className="mt-4 pt-4 border-t border-slate-700/50">
+            <div className="flex items-center space-x-2 text-slate-400 text-xs sm:text-sm">
+              <Mic className="h-4 w-4" />
+              <span>Cliquez sur le micro pour poser votre question vocalement</span>
+            </div>
           </div>
         </div>
       </div>
