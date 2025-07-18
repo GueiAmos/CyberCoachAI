@@ -695,9 +695,10 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
       const formData = new FormData();
       formData.append('audio', audioBlob, 'voice-message.webm');
       formData.append('conversationHistory', JSON.stringify(conversationHistory.slice(-10)));
+      formData.append('isLiveChat', 'true');
 
       // Appeler notre edge function pour traiter l'audio
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/voice-chat`, {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/live-voice-chat`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
@@ -741,6 +742,23 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
         { role: 'user', content: data.transcription },
         { role: 'assistant', content: data.response }
       ]);
+      
+      // Jouer la réponse audio si disponible
+      if (data.audioResponse) {
+        try {
+          const audioBlob = new Blob([Uint8Array.from(atob(data.audioResponse), c => c.charCodeAt(0))], { type: 'audio/wav' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = new HTMLAudioElement(audioUrl);
+          
+          audio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+          };
+          
+          await audio.play();
+        } catch (audioError) {
+          console.error('Erreur lors de la lecture audio:', audioError);
+        }
+      }
       
     } catch (error) {
       console.error('Erreur lors du traitement vocal:', error);
