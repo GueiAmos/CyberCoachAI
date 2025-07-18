@@ -1,6 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
-import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot, AlertTriangle, Users, Wifi, Grid3X3, Mic, MicOff } from 'lucide-react';
+import { ArrowLeft, BookOpen, Smartphone, Globe, Lock, Shield, Eye, ChevronRight, CheckCircle2, MessageCircle, Send, Bot, AlertTriangle, Users, Wifi, Grid3X3, Mic, MicOff, Phone, PhoneOff, Volume2 } from 'lucide-react';
 
 interface CyberGuideProps {
   onBack: () => void;
@@ -43,6 +43,12 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [isLiveChat, setIsLiveChat] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isAISpeaking, setIsAISpeaking] = useState(false);
+  const [liveMediaRecorder, setLiveMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [liveAudioChunks, setLiveAudioChunks] = useState<Blob[]>([]);
+  const [isListening, setIsListening] = useState(false);
 
   const sections: GuideSection[] = [
     {
@@ -423,6 +429,213 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
     }
   };
 
+  const startLiveChat = async () => {
+    try {
+      setIsConnecting(true);
+      
+      // Demander permission microphone
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+      // Initialiser l'enregistrement continu
+      const recorder = new MediaRecorder(stream, {
+        mimeType: 'audio/webm;codecs=opus'
+      });
+      
+      const chunks: Blob[] = [];
+      
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+      
+      recorder.onstop = async () => {
+        if (chunks.length > 0) {
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          await processLiveVoiceMessage(audioBlob);
+        }
+        chunks.length = 0; // Vider les chunks
+      };
+      
+      setLiveMediaRecorder(recorder);
+      setLiveAudioChunks(chunks);
+      setIsLiveChat(true);
+      setIsConnecting(false);
+      
+      // Message de bienvenue vocal
+      const welcomeMessage: ChatMessage = {
+        id: Date.now().toString(),
+        type: 'ai',
+        content: '🎙️ Discussion vocale activée ! Parlez-moi, je vous écoute et vous répondrai vocalement.',
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, welcomeMessage]);
+      
+      // Commencer l'écoute
+      startListening();
+      
+    } catch (error) {
+      console.error('Erreur lors du démarrage du chat vocal:', error);
+      setIsConnecting(false);
+      alert('Impossible d\'accéder au microphone. Vérifiez les permissions de votre navigateur.');
+    }
+  };
+  
+  const stopLiveChat = () => {
+    if (liveMediaRecorder) {
+      liveMediaRecorder.stream.getTracks().forEach(track => track.stop());
+      setLiveMediaRecorder(null);
+    }
+    setIsLiveChat(false);
+    setIsListening(false);
+    setIsAISpeaking(false);
+    
+    const endMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'ai',
+      content: '🔇 Discussion vocale terminée. Vous pouvez continuer par écrit.',
+      timestamp: new Date()
+    };
+    setChatMessages(prev => [...prev, endMessage]);
+  };
+  
+  const startListening = () => {
+    if (liveMediaRecorder && !isAISpeaking) {
+      setIsListening(true);
+      liveAudioChunks.length = 0; // Vider les anciens chunks
+      liveMediaRecorder.start();
+      
+      // Arrêter l'enregistrement après 5 secondes de silence détecté
+      // ou 30 secondes maximum
+      setTimeout(() => {
+        if (liveMediaRecorder && liveMediaRecorder.state === 'recording') {
+          liveMediaRecorder.stop();
+          setIsListening(false);
+        }
+      }, 10000); // 10 secondes max par message
+    }
+  };
+  
+  const processLiveVoiceMessage = async (audioBlob: Blob) => {
+    if (audioBlob.size < 1000) { // Ignorer les enregistrements trop courts
+      if (isLiveChat && !isAISpeaking) {
+        setTimeout(startListening, 1000); // Recommencer à écouter après 1 seconde
+      }
+      return;
+    }
+    
+    try {
+      setIsAISpeaking(true);
+      
+      // Créer FormData pour envoyer l'audio
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'live-voice.webm');
+      formData.append('conversationHistory', JSON.stringify(conversationHistory.slice(-10)));
+      formData.append('isLiveChat', 'true');
+      
+      // Appeler notre edge function pour le chat vocal en temps réel
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/live-voice-chat`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erreur lors du traitement vocal en temps réel');
+      }
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      // Ajouter le message utilisateur (transcrit)
+      if (data.transcription && data.transcription.trim()) {
+        const userMessage: ChatMessage = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: data.transcription,
+          timestamp: new Date()
+        };
+        setChatMessages(prev => [...prev, userMessage]);
+        
+        // Ajouter la réponse IA
+        const aiMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'ai',
+          content: data.response + ' 🔊',
+          timestamp: new Date()
+        };
+        setChatMessages(prev => [...prev, aiMessage]);
+        
+        // Mettre à jour l'historique
+        setConversationHistory(prev => [
+          ...prev,
+          { role: 'user', content: data.transcription },
+          { role: 'assistant', content: data.response }
+        ]);
+        
+        // Jouer la réponse audio de l'IA
+        if (data.audioResponse) {
+          const audioBlob = new Blob([Uint8Array.from(atob(data.audioResponse), c => c.charCodeAt(0))], { type: 'audio/wav' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = new Audio(audioUrl);
+          
+          audio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            setIsAISpeaking(false);
+            // Recommencer à écouter après que l'IA ait fini de parler
+            if (isLiveChat) {
+              setTimeout(startListening, 500);
+            }
+          };
+          
+          audio.onerror = () => {
+            URL.revokeObjectURL(audioUrl);
+            setIsAISpeaking(false);
+            if (isLiveChat) {
+              setTimeout(startListening, 500);
+            }
+          };
+          
+          await audio.play();
+        } else {
+          // Si pas d'audio, recommencer à écouter après un délai
+          setIsAISpeaking(false);
+          if (isLiveChat) {
+            setTimeout(startListening, 1000);
+          }
+        }
+      } else {
+        // Pas de transcription valide, recommencer à écouter
+        setIsAISpeaking(false);
+        if (isLiveChat) {
+          setTimeout(startListening, 1000);
+        }
+      }
+      
+    } catch (error) {
+      console.error('Erreur lors du traitement vocal en temps réel:', error);
+      setIsAISpeaking(false);
+      
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: "Désolé, je n'ai pas pu traiter votre message vocal. Pouvez-vous répéter ? 🎤",
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, errorMessage]);
+      
+      // Recommencer à écouter après une erreur
+      if (isLiveChat) {
+        setTimeout(startListening, 2000);
+      }
+    }
+  };
+
   const handleResetChat = () => {
     setChatMessages([
       {
@@ -582,6 +795,47 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           </button>
         </div>
 
+        {/* Live Chat Controls */}
+        <div className="flex justify-center mb-4 sm:mb-6">
+          {!isLiveChat ? (
+            <button
+              onClick={startLiveChat}
+              disabled={isConnecting}
+              className="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
+            >
+              {isConnecting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Connexion...</span>
+                </>
+              ) : (
+                <>
+                  <Phone className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>Discussion Vocale Live</span>
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 px-4 py-2 bg-green-600/20 border border-green-500/30 rounded-lg">
+                <div className={`w-3 h-3 rounded-full ${isListening ? 'bg-red-500 animate-pulse' : isAISpeaking ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
+                <span className="text-green-300 text-sm">
+                  {isListening ? 'Vous écoute...' : isAISpeaking ? 'IA parle...' : 'En attente'}
+                </span>
+                {isAISpeaking && <Volume2 className="h-4 w-4 text-blue-400 animate-pulse" />}
+              </div>
+              
+              <button
+                onClick={stopLiveChat}
+                className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
+              >
+                <PhoneOff className="h-4 w-4" />
+                <span>Terminer</span>
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* Chat Container */}
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
           {/* Messages */}
@@ -633,19 +887,19 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
                 onChange={(e) => setCurrentMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Posez votre question à CyberGuide IA..."
-                className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base"
-                disabled={isTyping}
+                className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base disabled:opacity-50"
+                disabled={isTyping || isLiveChat}
               />
               
               {/* Bouton vocal */}
               <button
                 onClick={isRecording ? stopRecording : startRecording}
-                disabled={isTyping}
+                disabled={isTyping || isLiveChat}
                 className={`px-3 sm:px-4 py-2 rounded-lg transition-all duration-300 ${
                   isRecording 
                     ? 'bg-red-600 hover:bg-red-700 animate-pulse' 
                     : 'bg-green-600 hover:bg-green-700'
-                } disabled:bg-slate-600 disabled:cursor-not-allowed text-white`}
+                } disabled:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50 text-white`}
                 title={isRecording ? 'Arrêter l\'enregistrement' : 'Enregistrer un message vocal'}
               >
                 {isRecording ? (
@@ -657,8 +911,8 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               
               <button
                 onClick={handleSendMessage}
-                disabled={!currentMessage.trim() || isTyping}
-                className="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                disabled={!currentMessage.trim() || isTyping || isLiveChat}
+                className="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50 text-white rounded-lg transition-colors"
               >
                 <Send className="h-4 w-4" />
               </button>
@@ -669,6 +923,13 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
               <div className="mt-2 flex items-center justify-center space-x-2 text-red-400">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                 <span className="text-sm">Enregistrement en cours... Cliquez sur le micro pour arrêter</span>
+              </div>
+            )}
+            
+            {/* Indicateur chat vocal */}
+            {isLiveChat && (
+              <div className="mt-2 text-center text-green-400 text-sm">
+                💬 Mode discussion vocale activé - Parlez naturellement, l'IA vous répondra vocalement
               </div>
             )}
           </div>
@@ -701,7 +962,7 @@ export default function CyberGuide({ onBack }: CyberGuideProps) {
           <div className="mt-4 pt-4 border-t border-slate-700/50">
             <div className="flex items-center space-x-2 text-slate-400 text-xs sm:text-sm">
               <Mic className="h-4 w-4" />
-              <span>Cliquez sur le micro pour poser votre question vocalement</span>
+              <span>Cliquez sur le micro pour un message vocal ou sur "Discussion Vocale Live" pour une conversation en temps réel</span>
             </div>
           </div>
         </div>
