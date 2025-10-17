@@ -1,5 +1,5 @@
 import React from 'react';
-import { GamepadIcon, ScanLine, BookOpen, Shield, Target, Brain, Star } from 'lucide-react';
+import { GamepadIcon, ScanLine, BookOpen, Shield, Lock, AlertTriangle, Eye, CheckCircle, ArrowRight } from 'lucide-react';
 import { Page } from '../App';
 
 interface HomePageProps {
@@ -8,165 +8,234 @@ interface HomePageProps {
 
 export default function HomePage({ onNavigate }: HomePageProps) {
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-40 right-20 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
+    <div className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-transparent to-slate-900/50 pointer-events-none" />
 
-      <div className="relative px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="max-w-7xl mx-auto pt-16 sm:pt-24">
-          <div className="text-center mb-20">
-            <div className="inline-block mb-6">
-              <div className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full">
-                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                <span className="text-white/90 font-medium">Votre coach cybersécurité personnel</span>
-              </div>
+      <div className="relative">
+        <section className="px-4 py-12 sm:py-20 text-center">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full mb-4">
+              <Shield className="h-4 w-4 text-emerald-400" />
+              <span className="text-sm text-emerald-300 font-medium">Formation gratuite en cybersécurité</span>
             </div>
 
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black mb-8 leading-none">
-              <span className="block text-white">Protégez</span>
-              <span className="block mt-2">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400">
-                  votre monde
-                </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
+              Protégez-vous en ligne,<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                c'est plus simple que vous ne le pensez
               </span>
-              <span className="block text-white mt-2">numérique</span>
             </h1>
 
-            <p className="text-xl sm:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed">
-              Maîtrisez la cybersécurité avec des outils interactifs propulsés par l'IA
+            <p className="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto">
+              Apprenez les bons réflexes pour sécuriser vos comptes, vos données personnelles
+              et votre vie privée sur internet. Sans jargon technique.
             </p>
-
-            <div className="flex flex-wrap justify-center gap-6 mb-16">
-              <div className="group">
-                <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 backdrop-blur-sm border border-emerald-500/20 rounded-2xl p-6 hover:border-emerald-400/40 transition-all duration-300">
-                  <Target className="h-8 w-8 text-emerald-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-white mb-1">35+</div>
-                  <div className="text-sm text-slate-400">Scénarios</div>
-                </div>
-              </div>
-              <div className="group">
-                <div className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/10 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-6 hover:border-cyan-400/40 transition-all duration-300">
-                  <Brain className="h-8 w-8 text-cyan-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-white mb-1">IA</div>
-                  <div className="text-sm text-slate-400">Avancée</div>
-                </div>
-              </div>
-              <div className="group">
-                <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-6 hover:border-blue-400/40 transition-all duration-300">
-                  <Shield className="h-8 w-8 text-blue-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-white mb-1">100%</div>
-                  <div className="text-sm text-slate-400">Sécurisé</div>
-                </div>
-              </div>
-            </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
-            <div
-              onClick={() => onNavigate('cyberquest-desc')}
-              className="group relative cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-3xl transform group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 opacity-90" />
-              <div className="absolute inset-0 bg-black/20 rounded-3xl" />
-
-              <div className="relative p-10 h-full flex flex-col">
-                <div className="mb-6">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-all duration-300">
-                    <GamepadIcon className="h-10 w-10 text-white" />
-                  </div>
-                  <h2 className="text-4xl font-bold text-white mb-3">CyberQuest</h2>
-                  <p className="text-emerald-100 font-medium mb-4">Jeu interactif de formation</p>
-                </div>
-                <p className="text-white/90 text-lg leading-relaxed flex-grow">
-                  Affrontez des cybermenaces réelles dans des scénarios immersifs. Apprenez en jouant.
-                </p>
-                <div className="mt-6 flex items-center text-white font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                  <span className="text-lg">Commencer l'aventure</span>
-                  <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('cyberscan-desc')}
-              className="group relative cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-red-600 rounded-3xl transform group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 opacity-90" />
-              <div className="absolute inset-0 bg-black/20 rounded-3xl" />
-
-              <div className="relative p-10 h-full flex flex-col">
-                <div className="mb-6">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-all duration-300">
-                    <ScanLine className="h-10 w-10 text-white" />
-                  </div>
-                  <h2 className="text-4xl font-bold text-white mb-3">CyberScan</h2>
-                  <p className="text-orange-100 font-medium mb-4">Diagnostic personnalisé</p>
-                </div>
-                <p className="text-white/90 text-lg leading-relaxed flex-grow">
-                  Évaluez vos pratiques de sécurité et recevez des recommandations sur mesure.
-                </p>
-                <div className="mt-6 flex items-center text-white font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                  <span className="text-lg">Analyser maintenant</span>
-                  <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('cyberguide-desc')}
-              className="group relative cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-3xl transform group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 opacity-90" />
-              <div className="absolute inset-0 bg-black/20 rounded-3xl" />
-
-              <div className="relative p-10 h-full flex flex-col">
-                <div className="mb-6">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-all duration-300">
-                    <BookOpen className="h-10 w-10 text-white" />
-                  </div>
-                  <h2 className="text-4xl font-bold text-white mb-3">CyberGuide</h2>
-                  <p className="text-blue-100 font-medium mb-4">Assistant IA intelligent</p>
-                </div>
-                <p className="text-white/90 text-lg leading-relaxed flex-grow">
-                  Posez vos questions et obtenez des conseils d'expert en cybersécurité instantanément.
-                </p>
-                <div className="mt-6 flex items-center text-white font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                  <span className="text-lg">Discuter avec l'IA</span>
-                  <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-12 text-center">
-            <div className="max-w-3xl mx-auto space-y-6">
-              <h3 className="text-3xl sm:text-4xl font-bold text-white">
-                Pourquoi choisir CyberCoach AI ?
-              </h3>
-              <p className="text-xl text-slate-300 leading-relaxed">
-                Une expérience d'apprentissage immersive qui transforme la cybersécurité en aventure captivante.
-                Formez-vous à votre rythme avec l'intelligence artificielle comme guide.
+        <section className="px-4 py-12 bg-slate-800/30">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                Pourquoi la cybersécurité vous concerne
+              </h2>
+              <p className="text-slate-300 text-lg max-w-2xl mx-auto">
+                Chaque jour, des millions de personnes sont victimes de piratage. Voici ce qui pourrait vous arriver.
               </p>
-              <div className="pt-6 border-t border-white/10">
-                <p className="text-slate-400">
-                  Conçu par <span className="text-cyan-400 font-semibold">Guei Gnomblehi Amos</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="bg-slate-800/50 border border-red-500/20 rounded-xl p-6 text-center hover:border-red-500/40 transition-colors">
+                <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Lock className="h-6 w-6 text-red-400" />
+                </div>
+                <h3 className="text-white font-semibold mb-2">Vol de compte</h3>
+                <p className="text-slate-400 text-sm">
+                  Quelqu'un accède à vos réseaux sociaux, emails ou compte bancaire
                 </p>
-                <p className="text-slate-500 text-sm mt-2">
-                  Expert en cybersécurité & développement d'applications
+              </div>
+
+              <div className="bg-slate-800/50 border border-orange-500/20 rounded-xl p-6 text-center hover:border-orange-500/40 transition-colors">
+                <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <AlertTriangle className="h-6 w-6 text-orange-400" />
+                </div>
+                <h3 className="text-white font-semibold mb-2">Arnaques</h3>
+                <p className="text-slate-400 text-sm">
+                  Faux emails, faux sites web qui vous demandent de l'argent ou vos données
+                </p>
+              </div>
+
+              <div className="bg-slate-800/50 border border-yellow-500/20 rounded-xl p-6 text-center hover:border-yellow-500/40 transition-colors">
+                <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Eye className="h-6 w-6 text-yellow-400" />
+                </div>
+                <h3 className="text-white font-semibold mb-2">Espionnage</h3>
+                <p className="text-slate-400 text-sm">
+                  Vos conversations, photos et activités surveillées sans votre accord
+                </p>
+              </div>
+
+              <div className="bg-slate-800/50 border border-cyan-500/20 rounded-xl p-6 text-center hover:border-cyan-500/40 transition-colors">
+                <div className="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Shield className="h-6 w-6 text-cyan-400" />
+                </div>
+                <h3 className="text-white font-semibold mb-2">Usurpation</h3>
+                <p className="text-slate-400 text-sm">
+                  Quelqu'un se fait passer pour vous et utilise votre identité
                 </p>
               </div>
             </div>
+
+            <div className="mt-8 text-center">
+              <p className="text-emerald-400 font-medium text-lg">
+                Bonne nouvelle : vous pouvez facilement vous protéger !
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <section className="px-4 py-12 sm:py-16">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                3 outils pour devenir incassable
+              </h2>
+              <p className="text-slate-300 text-lg">
+                Choisissez comment vous voulez apprendre
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+              <div
+                onClick={() => onNavigate('cyberquest-desc')}
+                className="group bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 border border-emerald-500/30 rounded-2xl p-6 sm:p-8 cursor-pointer hover:border-emerald-400/50 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300"
+              >
+                <div className="w-14 h-14 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-500/30 transition-colors">
+                  <GamepadIcon className="h-7 w-7 text-emerald-400" />
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-3">CyberQuest</h3>
+                <p className="text-emerald-200/80 font-medium mb-4">Apprendre en jouant</p>
+
+                <p className="text-slate-300 leading-relaxed mb-6">
+                  Testez vos réflexes face à de vraies situations : reconnaître un faux email,
+                  créer un bon mot de passe, éviter les pièges sur internet.
+                </p>
+
+                <div className="flex items-center text-emerald-400 font-semibold group-hover:translate-x-1 transition-transform">
+                  <span>Jouer maintenant</span>
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </div>
+              </div>
+
+              <div
+                onClick={() => onNavigate('cyberscan-desc')}
+                className="group bg-gradient-to-br from-orange-900/40 to-red-900/40 border border-orange-500/30 rounded-2xl p-6 sm:p-8 cursor-pointer hover:border-orange-400/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300"
+              >
+                <div className="w-14 h-14 bg-orange-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500/30 transition-colors">
+                  <ScanLine className="h-7 w-7 text-orange-400" />
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-3">CyberScan</h3>
+                <p className="text-orange-200/80 font-medium mb-4">Faire le point sur ma sécurité</p>
+
+                <p className="text-slate-300 leading-relaxed mb-6">
+                  Répondez à quelques questions simples et découvrez où vous êtes vulnérable.
+                  Recevez des conseils personnalisés et faciles à appliquer.
+                </p>
+
+                <div className="flex items-center text-orange-400 font-semibold group-hover:translate-x-1 transition-transform">
+                  <span>Faire le diagnostic</span>
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </div>
+              </div>
+
+              <div
+                onClick={() => onNavigate('cyberguide-desc')}
+                className="group bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 rounded-2xl p-6 sm:p-8 cursor-pointer hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300"
+              >
+                <div className="w-14 h-14 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-cyan-500/30 transition-colors">
+                  <BookOpen className="h-7 w-7 text-cyan-400" />
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-3">CyberGuide</h3>
+                <p className="text-cyan-200/80 font-medium mb-4">Poser mes questions</p>
+
+                <p className="text-slate-300 leading-relaxed mb-6">
+                  Discutez avec une intelligence artificielle qui répond à toutes vos questions
+                  sur la sécurité en ligne, avec des mots simples.
+                </p>
+
+                <div className="flex items-center text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform">
+                  <span>Commencer la discussion</span>
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-4 py-12 bg-gradient-to-br from-slate-800/50 to-slate-900/50">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                Ce que vous allez apprendre
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                'Créer des mots de passe vraiment sûrs',
+                'Repérer les faux emails et messages',
+                'Protéger vos données personnelles',
+                'Sécuriser vos comptes en ligne',
+                'Naviguer sur internet sans danger',
+                'Éviter les arnaques courantes'
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3 bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
+                  <CheckCircle className="h-6 w-6 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-slate-200">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-4 py-12 sm:py-16 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
+              Prêt à prendre le contrôle de votre sécurité ?
+            </h2>
+            <p className="text-lg text-slate-300 mb-8">
+              Commencez dès maintenant, c'est gratuit et accessible à tous
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => onNavigate('cyberquest-desc')}
+                className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold rounded-xl hover:from-emerald-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Démarrer avec CyberQuest
+              </button>
+              <button
+                onClick={() => onNavigate('cyberscan-desc')}
+                className="px-8 py-4 bg-slate-700/50 border border-slate-600 text-white font-semibold rounded-xl hover:bg-slate-700 transition-all duration-300"
+              >
+                Faire le diagnostic
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <footer className="px-4 py-8 border-t border-slate-700/50">
+          <div className="max-w-4xl mx-auto text-center space-y-2">
+            <p className="text-slate-400">
+              Créé par <span className="text-cyan-400 font-medium">Guei Gnomblehi Amos</span>
+            </p>
+            <p className="text-slate-500 text-sm">
+              Développeur & Expert en cybersécurité
+            </p>
+          </div>
+        </footer>
       </div>
     </div>
   );
